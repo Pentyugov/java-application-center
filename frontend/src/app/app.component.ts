@@ -84,6 +84,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private lastConfirmedBranchName: string | null = null;
     private branchesMap: Map<string, domain.Branches> = new Map();
 
+    public isGitFetching = false;
 
     constructor(
             private readonly notificationService: NotificationService,
@@ -352,7 +353,10 @@ export class AppComponent implements OnInit, OnDestroy {
         const clone: ApplicationInfo = new ApplicationInfo();
 
         clone.appName = app.appName + '_copy';
+        clone.baseDir = app.baseDir;
         clone.jarPath = app.jarPath;
+        clone.hasGit = app.hasGit;
+        clone.hasMaven = app.hasMaven;
 
         clone.appArguments = app.appArguments
                 ? [...app.appArguments]
@@ -610,22 +614,25 @@ export class AppComponent implements OnInit, OnDestroy {
         });
     }
 
-    getGitBranches(appName: string): void {
+    getGitBranches(appName: string, fetch: boolean = false): void {
+        this.isGitFetching = fetch
+
         const find = this.selectedApp
         if (find && find.hasGit) {
             this.subscriptions.push(
-                    this.gitService.getGitBranches(appName).subscribe({
+                    this.gitService.getGitBranches(appName, fetch).subscribe({
                         next: (response: domain.Branches) => {
-                            this.branchesMap.set(appName, response);
-
-                            const current = response.Current ?? null;
-
-                            this.selectedBranchName = current;
-                            this.lastConfirmedBranchName = current;
-
-                            this.branchCtrl.setValue(current, {emitEvent: false});
+                            if (response) {
+                                this.branchesMap.set(appName, response);
+                                const current = response.Current ?? null;
+                                this.selectedBranchName = current;
+                                this.lastConfirmedBranchName = current;
+                                this.branchCtrl.setValue(current, {emitEvent: false});
+                            }
+                            this.isGitFetching = false
                         },
                         error: _err => {
+                            this.isGitFetching = false
                             this.notificationService.notifyError(_err, 'stopAll');
                         }
                     })

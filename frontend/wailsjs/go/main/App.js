@@ -10,8 +10,8 @@ export function GetCentralInfoDTO() {
   return window['go']['main']['App']['GetCentralInfoDTO']();
 }
 
-export function GetGitBranches(arg1) {
-  return window['go']['main']['App']['GetGitBranches'](arg1);
+export function GetGitBranches(arg1, arg2) {
+  return window['go']['main']['App']['GetGitBranches'](arg1, arg2);
 }
 
 export function GetRunningProcesses() {

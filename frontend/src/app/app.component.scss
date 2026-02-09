@@ -4,26 +4,25 @@
 .page {
     width: 100%;
     height: 100vh;
-    overflow: hidden; /* страница не скроллится */
+    overflow: hidden;
     padding: 22px 18px 40px;
     box-sizing: border-box;
 }
 
 .panel {
     height: 100%;
-    overflow: visible; /* ВАЖНО: не режем скругления/тени карточек */
+    overflow: visible;
 }
 
 .apps-layout {
     height: 100%;
-    overflow: visible; /* ВАЖНО: не режем скругления/тени карточек */
+    overflow: visible;
     display: grid;
     grid-template-columns: 380px minmax(0, 1fr) 320px;
     gap: 14px;
     align-items: stretch;
 }
 
-/* Критично для grid: чтобы контент не распирал страницу */
 .apps-left,
 .apps-right,
 .apps-side {
@@ -45,10 +44,9 @@
 
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* важно: скролл НЕ на всей карточке */
+    overflow: hidden;
 }
 
-/* Header + actions */
 .apps-left-head {
     display: flex;
     align-items: center;
@@ -97,19 +95,17 @@
     font-size: 18px;
 }
 
-/* List */
 .apps-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* Только список скроллится */
 .apps-list-scroll {
     flex: 1 1 auto;
-    min-height: 0;      /* критично для flex + overflow */
+    min-height: 0;
     overflow: auto;
-    padding-right: 2px; /* чуть места под скролл */
+    padding-right: 2px;
 }
 
 /* Item */
@@ -128,7 +124,7 @@
     color: rgba(255, 255, 255, 0.88);
 
     cursor: pointer;
-    margin-bottom: 0; /* gap управляет отступами */
+    margin-bottom: 0;
     transition: background 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
 }
 
@@ -244,7 +240,6 @@
     min-width: 0;
 }
 
-/* Карточка в центре — основной скролл */
 .apps-right > .card.app {
     height: 100%;
     padding: 14px 14px 12px;
@@ -252,7 +247,6 @@
     overflow-y: auto;
 }
 
-/* Если показана пустая подсказка */
 .apps-right > .card.app.empty-hint {
     height: 100%;
     padding: 18px;
@@ -260,7 +254,6 @@
     overflow-y: auto;
 }
 
-/* Top block */
 .app-top {
     display: flex;
     align-items: flex-start;
@@ -343,12 +336,18 @@ hr.soft {
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.10);
     background: rgba(255, 255, 255, 0.02);
+
+    /* Ключевой фикс: чтобы появление/исчезновение скролла не меняло геометрию */
+    scrollbar-gutter: stable both-edges;
+    box-sizing: border-box;
 }
 
-/* Скролл внутри таблицы только если строк больше 8 */
+/*
+  >8 строк: появляется внутренний скролл, но высота НЕ прыгает,
+  а общая карточка не начинает скроллиться из-за +5..10px.
+*/
 .table-wrap.scroll-8 {
-    /* 8 строк table-sm + шапка + бордеры (подобрано визуально под твои размеры) */
-    max-height: 280px;
+    max-height: 398px; /* было 400px, срезаем пару px чтобы не толкало карточку */
     overflow: auto;
 }
 
@@ -456,7 +455,6 @@ hr.soft {
     letter-spacing: 0.2px;
 }
 
-/* Git field */
 .git-branch-field {
     width: 100%;
 }
@@ -516,7 +514,6 @@ hr.soft {
     border-radius: 999px !important;
 }
 
-/* Utils */
 .break {
     word-break: break-word;
 }
@@ -527,10 +524,9 @@ hr.soft {
     line-height: 1.2;
 }
 
-/* ===== Responsive ===== */
 @media (max-width: 1100px) {
     .page {
-        height: auto;     /* на мобилке лучше вернуть естественную высоту */
+        height: auto;
         overflow: visible;
     }
 
@@ -555,4 +551,16 @@ hr.soft {
     .table {
         min-width: 720px;
     }
+}
+
+@keyframes icon-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+mat-icon.spin {
+    animation: icon-spin 0.9s linear infinite;
+    transform-origin: 50% 50%;
+    display: inline-block; // важно, чтобы transform работал стабильно
+    will-change: transform;
 }

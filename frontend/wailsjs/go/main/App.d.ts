@@ -8,7 +8,7 @@ export function CheckoutBranch(arg1:string,arg2:string):Promise<void>;
 
 export function GetCentralInfoDTO():Promise<dto.CentralInfoDTO>;
 
-export function GetGitBranches(arg1:string):Promise<domain.Branches>;
+export function GetGitBranches(arg1:string,arg2:boolean):Promise<domain.Branches>;
 
 export function GetRunningProcesses():Promise<Array<dto.RunningProcessDTO>>;
 

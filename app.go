@@ -143,8 +143,8 @@ func (a *App) StopLogStreaming() {
 	a.deps.Services.CentralService.StopLog(a.deps.LogTailer)
 }
 
-func (a *App) GetGitBranches(appName string) (res *domain.Branches) {
-	res, err := a.deps.Services.CentralService.GetGitBranches(appName)
+func (a *App) GetGitBranches(appName string, fetch bool) (res *domain.Branches) {
+	res, err := a.deps.Services.CentralService.GetGitBranches(appName, fetch)
 	if err != nil {
 		a.logError(err)
 	}

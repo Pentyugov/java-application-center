@@ -229,7 +229,7 @@ func (s *CentralService) StopLog(logTailer *util.LogTailer) {
 	logTailer.Stop()
 }
 
-func (s *CentralService) GetGitBranches(appName string) (*domain.Branches, error) {
+func (s *CentralService) GetGitBranches(appName string, fetch bool) (*domain.Branches, error) {
 	s.logger.Info("execute get git branches", "app", appName)
 	appInfo, err := s.getAppInfoByName(appName)
 	if err != nil {
@@ -238,7 +238,7 @@ func (s *CentralService) GetGitBranches(appName string) (*domain.Branches, error
 	if !appInfo.HasGit {
 		return nil, fmt.Errorf("отсутствует Git репозиторий для приложения %s", appName)
 	}
-	return s.gitService.ListBranches(appInfo.BaseDir)
+	return s.gitService.ListBranches(appInfo.BaseDir, fetch)
 }
 
 func (s *CentralService) CheckoutBranch(appName string, branch string) error {

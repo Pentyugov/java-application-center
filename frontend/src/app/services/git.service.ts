@@ -12,8 +12,8 @@ export class GitService {
   constructor() {
   }
 
-  getGitBranches(appName: string): Observable<domain.Branches> {
-    return from(GetGitBranches(appName));
+  getGitBranches(appName: string, fetch: boolean = false): Observable<domain.Branches> {
+    return from(GetGitBranches(appName, fetch));
   }
 
   checkoutBranch(appName: string, branch: string): Observable<void> {

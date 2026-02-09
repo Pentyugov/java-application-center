@@ -92,7 +92,7 @@
                 </div>
 
                 <!-- RIGHT: details -->
-                <div class="apps-right">
+                <div class="apps-right pretty-scroll">
                     <ng-container *ngIf="selectedApp as app; else selectHint">
                         <div class="card app">
                             <div class="app-top">
@@ -285,8 +285,9 @@
                             <div class="apps-side-head">
                                 <div class="apps-side-title">Git</div>
                                 <button mat-stroked-button class="btn btn-sm" type="button"
-                                        (click)="getGitBranches(selectedApp.appName)">
-                                    <mat-icon>refresh</mat-icon>
+                                        [disabled]="isGitFetching"
+                                        (click)="getGitBranches(selectedApp.appName, true)">
+                                    <mat-icon [class.spin]="isGitFetching">refresh</mat-icon>
                                     Обновить
                                 </button>
                             </div>
