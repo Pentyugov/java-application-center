@@ -128,7 +128,7 @@
     color: rgba(255, 255, 255, 0.88);
 
     cursor: pointer;
-    margin-bottom: 0; /* было 8px, теперь gap в контейнере */
+    margin-bottom: 0; /* gap управляет отступами */
     transition: background 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
 }
 
@@ -343,6 +343,13 @@ hr.soft {
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.10);
     background: rgba(255, 255, 255, 0.02);
+}
+
+/* Скролл внутри таблицы только если строк больше 8 */
+.table-wrap.scroll-8 {
+    /* 8 строк table-sm + шапка + бордеры (подобрано визуально под твои размеры) */
+    max-height: 280px;
+    overflow: auto;
 }
 
 .table {

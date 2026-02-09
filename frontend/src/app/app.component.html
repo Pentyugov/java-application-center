@@ -182,7 +182,11 @@
 
                                 <div class="empty small" *ngIf="(app.appArguments?.length ?? 0) === 0">пока пусто</div>
 
-                                <div class="table-wrap" *ngIf="(app.appArguments?.length ?? 0) > 0">
+                                <div
+                                        class="table-wrap pretty-scroll"
+                                        *ngIf="(app.appArguments?.length ?? 0) > 0"
+                                        [class.scroll-8]="(app.appArguments?.length ?? 0) > 8"
+                                >
                                     <table class="table table-sm">
                                         <thead>
                                         <tr>
@@ -228,7 +232,11 @@
 
                                 <div class="empty small" *ngIf="(app.envVariables?.length ?? 0) === 0">пока пусто</div>
 
-                                <div class="table-wrap" *ngIf="(app.envVariables?.length ?? 0) > 0">
+                                <div
+                                        class="table-wrap pretty-scroll"
+                                        *ngIf="(app.envVariables?.length ?? 0) > 0"
+                                        [class.scroll-8]="(app.envVariables?.length ?? 0) > 8"
+                                >
                                     <table class="table table-sm">
                                         <thead>
                                         <tr>
