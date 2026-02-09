@@ -64,9 +64,10 @@ func PickCentralInfoFolder(ctx context.Context) (string, error) {
 	return path, nil
 }
 
-func PickGitFolder(ctx context.Context) (string, error) {
+func PickGitFolder(ctx context.Context, appDir string) (string, error) {
 	path, err := runtime.OpenDirectoryDialog(ctx, runtime.OpenDialogOptions{
-		Title: "Выберите папку GIT",
+		Title:            "Выберите папку c .git",
+		DefaultDirectory: appDir,
 	})
 
 	if err != nil {

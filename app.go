@@ -100,8 +100,8 @@ func (a *App) PickJarFile() (res string) {
 	return
 }
 
-func (a *App) PickGitFolder() (res string) {
-	res, err := util.PickGitFolder(a.ctx)
+func (a *App) PickGitFolder(appName string) (res string) {
+	res, err := a.deps.Services.CentralService.PickGitDir(appName)
 	if err != nil {
 		a.logError(err)
 	}

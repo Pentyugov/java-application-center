@@ -213,6 +213,14 @@ func (s *CentralService) StopLog(logTailer *util.LogTailer) {
 	logTailer.Stop()
 }
 
+func (s *CentralService) PickGitDir(appName string) (string, error) {
+	found, err := s.getAppInfoByName(appName)
+	if err != nil {
+		return "", err
+	}
+	return util.PickGitFolder(s.ctx, filepath.Dir(found.Path))
+}
+
 func (s *CentralService) GetGitBranches(appName string) (*domain.Branches, error) {
 	s.logger.Info("execute get git branches", "app", appName)
 	appInfo, err := s.getAppInfoByName(appName)

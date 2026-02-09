@@ -285,11 +285,11 @@
                 <mat-form-field class="git-branch-field" appearance="outline">
                   <mat-label>Ветка</mat-label>
 
-                  <mat-select
-                    [value]="selectedBranchName ?? br.Current"
-                    (selectionChange)="onBranchSelected($event.value)"
-                    panelClass="git-branch-panel"
-                  >
+                    <mat-select
+                            [formControl]="branchCtrl"
+                            (selectionChange)="onBranchSelected($event.value)"
+                            panelClass="git-branch-panel"
+                    >
                     <!-- current -->
                     <mat-option class="git-sep" disabled>
                       <span class="git-sep-text">current</span>

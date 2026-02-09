@@ -26,8 +26,8 @@ export function PickCentralInfoFolder() {
   return window['go']['main']['App']['PickCentralInfoFolder']();
 }
 
-export function PickGitFolder() {
-  return window['go']['main']['App']['PickGitFolder']();
+export function PickGitFolder(arg1) {
+  return window['go']['main']['App']['PickGitFolder'](arg1);
 }
 
 export function PickJarFile() {
