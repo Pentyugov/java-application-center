@@ -424,3 +424,38 @@ body {
 
     --mat-mdc-radio-checked-ripple-color: var(--accentSoft) !important;
 }
+
+/* =======================
+   Pretty Scrollbar (utility)
+   ======================= */
+
+/* Firefox (works only on elements with this class) */
+.pretty-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(59, 130, 246, 0.40) rgba(7, 12, 22, 0.55);
+}
+
+/* Chrome / Edge / Safari */
+.pretty-scroll::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.pretty-scroll::-webkit-scrollbar-track {
+    background: rgba(7, 12, 22, 0.55);
+    border-radius: 999px;
+}
+
+.pretty-scroll::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.28);
+    border: 2px solid rgba(7, 12, 22, 0.55);
+    border-radius: 999px;
+}
+
+.pretty-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.40);
+}
+
+.pretty-scroll::-webkit-scrollbar-corner {
+    background: rgba(7, 12, 22, 0.55);
+}

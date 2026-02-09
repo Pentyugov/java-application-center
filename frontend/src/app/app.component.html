@@ -1,7 +1,5 @@
 <!-- Applications -->
 <div class="page">
-
-
     <div class="panel">
         <ng-container>
 
@@ -37,12 +35,9 @@
                                 <mat-icon>stop</mat-icon>
                                 Остановить все
                             </button>
-
-
                         </div>
 
                         <div class="apps-left-head">
-
                             <button mat-stroked-button class="btn btn-sm left-action-btn" type="button"
                                     (click)="openAddAppInfoDialog()">
                                 <mat-icon>add</mat-icon>
@@ -54,13 +49,12 @@
                                 <mat-icon>refresh</mat-icon>
                                 Обновить
                             </button>
-
-
                         </div>
                     </div>
 
+                    <!-- ВАЖНО: скролл только у списка -->
                     <div
-                            class="apps-list"
+                            class="apps-list apps-list-scroll pretty-scroll"
                             cdkDropList
                             [cdkDropListData]="centralInfo.applicationInfos"
                             (cdkDropListDropped)="onAppsDrop($event)"

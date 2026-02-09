@@ -1,92 +1,92 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 }
 
 .head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 8px 12px;
 }
 
 .title {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
 }
 
 .name {
-  font-weight: 900;
-  font-size: 16px;
-  color: rgba(255,255,255,0.92);
+    font-weight: 900;
+    font-size: 16px;
+    color: rgba(255,255,255,0.92);
 }
 
 .meta {
-  font-size: 12.5px;
+    font-size: 12.5px;
 }
 
 .actions {
-  display: inline-flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+    display: inline-flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .viewport {
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  background: rgba(0,0,0,0.22);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 12px;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 12px;
 
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 12px;
-  line-height: 18px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+    line-height: 18px;
 }
 
 .line {
-  display: flex;
-  gap: 10px;
-  padding: 0 10px;
-  white-space: pre;
+    display: flex;
+    gap: 10px;
+    padding: 0 10px;
+    white-space: pre;
 }
 
 .ln {
-  flex: 0 0 64px;
-  text-align: right;
-  padding-right: 10px;
-  color: rgba(148, 163, 184, 0.55);
-  border-right: 1px solid rgba(255,255,255,0.08);
-  user-select: none;
+    flex: 0 0 64px;
+    text-align: right;
+    padding-right: 10px;
+    color: rgba(148, 163, 184, 0.55);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    user-select: none;
 }
 
 .txt {
-  flex: 1 1 auto;
-  min-width: 0;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .line.err .txt {
-  color: rgba(244, 135, 113, 0.95);
+    color: rgba(244, 135, 113, 0.95);
 }
 
 .line.err .txt .c-reset {
-  color: rgba(244, 135, 113, 0.95);
+    color: rgba(244, 135, 113, 0.95);
 }
 
 .ts {
-  color: rgba(106, 153, 85, 0.95);
-  flex: 0 0 auto;
+    color: rgba(106, 153, 85, 0.95);
+    flex: 0 0 auto;
 }
 
 .lvl {
-  flex: 0 0 74px;
-  opacity: 0.95;
+    flex: 0 0 74px;
+    opacity: 0.95;
 }
 
 .lvl[data-level="ERROR"] { color: rgba(244, 135, 113, 0.98); }
@@ -97,33 +97,9 @@
 .lvl[data-level="UNKNOWN"] { color: rgba(156, 220, 254, 0.75); }
 
 .msg {
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-:host ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-:host ::-webkit-scrollbar-track {
-  background: rgba(7, 12, 22, 0.55);
-  border-radius: 999px;
-}
-
-:host ::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.28);
-  border: 2px solid rgba(7, 12, 22, 0.55);
-  border-radius: 999px;
-}
-
-:host ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.40);
-}
-
-:host ::-webkit-scrollbar-corner {
-  background: rgba(7, 12, 22, 0.55);
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .c-reset { color: rgba(255,255,255,0.88); }

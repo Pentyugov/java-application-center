@@ -9,7 +9,6 @@
     box-sizing: border-box;
 }
 
-
 .panel {
     height: 100%;
     overflow: visible; /* ВАЖНО: не режем скругления/тени карточек */
@@ -39,11 +38,14 @@
     box-shadow: var(--shadow);
 }
 
-/* ===== LEFT column (scroll inside) ===== */
+/* ===== LEFT column (scroll only list) ===== */
 .apps-left {
     height: 100%;
-    overflow: auto;
     padding: 12px;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* важно: скролл НЕ на всей карточке */
 }
 
 /* Header + actions */
@@ -102,6 +104,14 @@
     gap: 8px;
 }
 
+/* Только список скроллится */
+.apps-list-scroll {
+    flex: 1 1 auto;
+    min-height: 0;      /* критично для flex + overflow */
+    overflow: auto;
+    padding-right: 2px; /* чуть места под скролл */
+}
+
 /* Item */
 .apps-item {
     width: 100%;
@@ -118,8 +128,7 @@
     color: rgba(255, 255, 255, 0.88);
 
     cursor: pointer;
-    margin-bottom: 8px;
-
+    margin-bottom: 0; /* было 8px, теперь gap в контейнере */
     transition: background 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
 }
 
