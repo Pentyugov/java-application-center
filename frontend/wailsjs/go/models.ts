@@ -36,10 +36,12 @@ export namespace domain {
 	    appName: string;
 	    envVariables: EnvVariable[];
 	    appArguments: string[];
-	    path: string;
-	    gitPath: string;
+	    baseDir: string;
+	    jarPath: string;
 	    startOrder: number;
 	    isActive: boolean;
+	    hasGit: boolean;
+	    hasMaven: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ApplicationInfo(source);
@@ -50,10 +52,12 @@ export namespace domain {
 	        this.appName = source["appName"];
 	        this.envVariables = this.convertValues(source["envVariables"], EnvVariable);
 	        this.appArguments = source["appArguments"];
-	        this.path = source["path"];
-	        this.gitPath = source["gitPath"];
+	        this.baseDir = source["baseDir"];
+	        this.jarPath = source["jarPath"];
 	        this.startOrder = source["startOrder"];
 	        this.isActive = source["isActive"];
+	        this.hasGit = source["hasGit"];
+	        this.hasMaven = source["hasMaven"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -145,11 +149,13 @@ export namespace dto {
 	    appName: string;
 	    envVariables: EnvVariableDTO[];
 	    appArguments: string[];
-	    path: string;
-	    gitPath: string;
+	    baseDir: string;
+	    jarPath: string;
 	    startOrder: number;
 	    isActive: boolean;
 	    pid: number;
+	    hasGit: boolean;
+	    hasMaven: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ApplicationInfoDTO(source);
@@ -160,11 +166,13 @@ export namespace dto {
 	        this.appName = source["appName"];
 	        this.envVariables = this.convertValues(source["envVariables"], EnvVariableDTO);
 	        this.appArguments = source["appArguments"];
-	        this.path = source["path"];
-	        this.gitPath = source["gitPath"];
+	        this.baseDir = source["baseDir"];
+	        this.jarPath = source["jarPath"];
 	        this.startOrder = source["startOrder"];
 	        this.isActive = source["isActive"];
 	        this.pid = source["pid"];
+	        this.hasGit = source["hasGit"];
+	        this.hasMaven = source["hasMaven"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -218,6 +226,20 @@ export namespace dto {
 		}
 	}
 	
+	export class PickBaseApplicationFolderDTO {
+	    baseDir: string;
+	    jarPaths: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new PickBaseApplicationFolderDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.baseDir = source["baseDir"];
+	        this.jarPaths = source["jarPaths"];
+	    }
+	}
 	export class RunningProcessDTO {
 	    path: string;
 	    pid: number;

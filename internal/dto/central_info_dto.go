@@ -14,11 +14,13 @@ type ApplicationInfoDTO struct {
 	AppName      string           `json:"appName"`
 	EnvVariables []EnvVariableDTO `json:"envVariables"`
 	AppArguments []string         `json:"appArguments"`
-	Path         string           `json:"path"`
-	GitPath      string           `json:"gitPath"`
+	BaseDir      string           `json:"baseDir"`
+	JarPath      string           `json:"jarPath"`
 	StartOrder   uint8            `json:"startOrder"`
 	IsActive     bool             `json:"isActive"`
 	PID          int              `json:"pid"`
+	HasGit       bool             `json:"hasGit"`
+	HasMaven     bool             `json:"hasMaven"`
 }
 
 type RunningProcessDTO struct {

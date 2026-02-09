@@ -8,15 +8,15 @@ export function CheckoutBranch(arg1:string,arg2:string):Promise<void>;
 
 export function GetCentralInfoDTO():Promise<dto.CentralInfoDTO>;
 
-export function GetGitBranches(arg1:string):Promise<domain.Branches>;
+export function GetGitBranches(arg1:string,arg2:boolean):Promise<domain.Branches>;
 
 export function GetRunningProcesses():Promise<Array<dto.RunningProcessDTO>>;
 
 export function GetSettings():Promise<domain.AppSettings>;
 
-export function PickCentralInfoFolder():Promise<string>;
+export function PickBaseApplicationFolder():Promise<dto.PickBaseApplicationFolderDTO>;
 
-export function PickGitFolder(arg1:string):Promise<string>;
+export function PickCentralInfoFolder():Promise<string>;
 
 export function PickJarFile():Promise<string>;
 
@@ -27,6 +27,8 @@ export function RunApplication(arg1:string):Promise<util.CommandResult>;
 export function Save(arg1:domain.CentralInfo):Promise<dto.CentralInfoDTO>;
 
 export function SaveSettings(arg1:domain.AppSettings):Promise<void>;
+
+export function ScanJars(arg1:string):Promise<Array<string>>;
 
 export function StartLogStreaming(arg1:string):Promise<void>;
 

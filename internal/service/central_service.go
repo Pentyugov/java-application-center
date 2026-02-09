@@ -11,7 +11,6 @@ import (
 	"log/slog"
 	"path/filepath"
 	"sort"
-	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -54,9 +53,26 @@ func (s *CentralService) Save(info *domain.CentralInfo) (*dto.CentralInfoDTO, er
 	sort.Slice(info.ApplicationInfos, func(i, j int) bool {
 		return info.ApplicationInfos[i].StartOrder < info.ApplicationInfos[j].StartOrder
 	})
+
 	s.centralInfo = info
 
-	err := util.WriteJSON(util.BuildCentralInfoFilePath(s.settingsService.Settings.CentralInfoPath), info)
+	for i := range s.centralInfo.ApplicationInfos {
+		appInfo := &s.centralInfo.ApplicationInfos[i]
+
+		hasGit, err := util.HasGitFolder(appInfo.BaseDir)
+		if err != nil {
+			s.logger.Error("Failed to check if git folder exists", "err", err, "appInfo", appInfo)
+		}
+		appInfo.HasGit = hasGit
+
+		hasMaven, err := util.HasMaven(appInfo.BaseDir)
+		if err != nil {
+			s.logger.Error("Failed to check if maven pom.xml exists", "err", err, "appInfo", appInfo)
+		}
+		appInfo.HasMaven = hasMaven
+	}
+
+	err := util.WriteJSON(util.BuildCentralInfoFilePath(s.settingsService.Settings.CentralInfoPath), s.centralInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +124,7 @@ func (s *CentralService) RunApplication(appName string) (*util.CommandResult, er
 	}
 
 	for _, process := range processes {
-		if process.Path == found.Path {
+		if process.Path == found.JarPath {
 			return nil, errors.New(fmt.Sprintf("Приложение %s уже запущено", appName))
 		}
 	}
@@ -170,7 +186,7 @@ func (s *CentralService) GetRunningProcesses() ([]*dto.RunningProcessDTO, error)
 
 	appByPath := make(map[string]string, len(s.centralInfo.ApplicationInfos))
 	for _, ai := range s.centralInfo.ApplicationInfos {
-		appByPath[ai.Path] = ai.AppName
+		appByPath[ai.JarPath] = ai.AppName
 	}
 
 	dtos := make([]*dto.RunningProcessDTO, 0, len(processes))
@@ -213,24 +229,16 @@ func (s *CentralService) StopLog(logTailer *util.LogTailer) {
 	logTailer.Stop()
 }
 
-func (s *CentralService) PickGitDir(appName string) (string, error) {
-	found, err := s.getAppInfoByName(appName)
-	if err != nil {
-		return "", err
-	}
-	return util.PickGitFolder(s.ctx, filepath.Dir(found.Path))
-}
-
-func (s *CentralService) GetGitBranches(appName string) (*domain.Branches, error) {
+func (s *CentralService) GetGitBranches(appName string, fetch bool) (*domain.Branches, error) {
 	s.logger.Info("execute get git branches", "app", appName)
 	appInfo, err := s.getAppInfoByName(appName)
 	if err != nil {
 		return nil, err
 	}
-	if strings.TrimSpace(appInfo.GitPath) == "" {
-		return nil, fmt.Errorf("не указан Git репозиторий для приложения %s", appName)
+	if !appInfo.HasGit {
+		return nil, fmt.Errorf("отсутствует Git репозиторий для приложения %s", appName)
 	}
-	return s.gitService.ListBranches(appInfo.GitPath)
+	return s.gitService.ListBranches(appInfo.BaseDir, fetch)
 }
 
 func (s *CentralService) CheckoutBranch(appName string, branch string) error {
@@ -239,10 +247,10 @@ func (s *CentralService) CheckoutBranch(appName string, branch string) error {
 	if err != nil {
 		return err
 	}
-	if strings.TrimSpace(appInfo.GitPath) == "" {
+	if !appInfo.HasGit {
 		return fmt.Errorf("не указан Git репозиторий для приложения %s", appName)
 	}
-	return s.gitService.CheckoutBranch(appInfo.GitPath, branch)
+	return s.gitService.CheckoutBranch(appInfo.BaseDir, branch)
 }
 
 func (s *CentralService) setPIDInfo(appInfos *[]dto.ApplicationInfoDTO) error {
@@ -254,7 +262,7 @@ func (s *CentralService) setPIDInfo(appInfos *[]dto.ApplicationInfoDTO) error {
 	appByPath := make(map[string]*dto.ApplicationInfoDTO, len(*appInfos))
 	for i := range *appInfos {
 		ai := &(*appInfos)[i]
-		appByPath[ai.Path] = ai
+		appByPath[ai.JarPath] = ai
 	}
 
 	for _, procInfo := range processes {

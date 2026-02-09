@@ -21,9 +21,11 @@ func NewGitService(lg *slog.Logger, ctx context.Context) *GitService {
 	return &GitService{ctx: ctx, logger: lg}
 }
 
-func (s *GitService) ListBranches(gitPath string) (*domain.Branches, error) {
-	if err := s.fetch(gitPath); err != nil {
-		return nil, fmt.Errorf("failed to fetch git repository: %w", err)
+func (s *GitService) ListBranches(gitPath string, fetch bool) (*domain.Branches, error) {
+	if fetch {
+		if err := s.fetch(gitPath); err != nil {
+			return nil, fmt.Errorf("failed to fetch git repository: %w", err)
+		}
 	}
 
 	result := &domain.Branches{}

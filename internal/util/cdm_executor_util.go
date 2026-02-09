@@ -30,11 +30,11 @@ func RunApplication(appInfo *domain.ApplicationInfo) (*CommandResult, error) {
 	if appInfo == nil {
 		return nil, fmt.Errorf("appInfo is nil")
 	}
-	if strings.TrimSpace(appInfo.Path) == "" {
-		return nil, fmt.Errorf("appInfo.Path is empty")
+	if strings.TrimSpace(appInfo.JarPath) == "" {
+		return nil, fmt.Errorf("appInfo.JarPath is empty")
 	}
 
-	jarPath := appInfo.Path
+	jarPath := appInfo.JarPath
 	javaArgs := buildJavaArgs(appInfo.AppArguments, jarPath)
 	inner := buildCmdInnerLine("java", javaArgs)
 
@@ -62,11 +62,11 @@ func RunApplicationSilent(appInfo *domain.ApplicationInfo) (*CommandResult, erro
 	if appInfo == nil {
 		return nil, fmt.Errorf("appInfo is nil")
 	}
-	if strings.TrimSpace(appInfo.Path) == "" {
-		return nil, fmt.Errorf("appInfo.Path is empty")
+	if strings.TrimSpace(appInfo.JarPath) == "" {
+		return nil, fmt.Errorf("appInfo.JarPath is empty")
 	}
 
-	jarPath := appInfo.Path
+	jarPath := appInfo.JarPath
 	logsDir, err := LogsDir()
 	if err != nil {
 		return nil, err

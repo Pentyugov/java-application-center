@@ -10,8 +10,8 @@ export function GetCentralInfoDTO() {
   return window['go']['main']['App']['GetCentralInfoDTO']();
 }
 
-export function GetGitBranches(arg1) {
-  return window['go']['main']['App']['GetGitBranches'](arg1);
+export function GetGitBranches(arg1, arg2) {
+  return window['go']['main']['App']['GetGitBranches'](arg1, arg2);
 }
 
 export function GetRunningProcesses() {
@@ -22,12 +22,12 @@ export function GetSettings() {
   return window['go']['main']['App']['GetSettings']();
 }
 
-export function PickCentralInfoFolder() {
-  return window['go']['main']['App']['PickCentralInfoFolder']();
+export function PickBaseApplicationFolder() {
+  return window['go']['main']['App']['PickBaseApplicationFolder']();
 }
 
-export function PickGitFolder(arg1) {
-  return window['go']['main']['App']['PickGitFolder'](arg1);
+export function PickCentralInfoFolder() {
+  return window['go']['main']['App']['PickCentralInfoFolder']();
 }
 
 export function PickJarFile() {
@@ -48,6 +48,10 @@ export function Save(arg1) {
 
 export function SaveSettings(arg1) {
   return window['go']['main']['App']['SaveSettings'](arg1);
+}
+
+export function ScanJars(arg1) {
+  return window['go']['main']['App']['ScanJars'](arg1);
 }
 
 export function StartLogStreaming(arg1) {
