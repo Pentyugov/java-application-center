@@ -1,0 +1,36 @@
+<div class="head"
+     cdkDrag
+     cdkDragRootElement=".cdk-overlay-pane"
+     cdkDragHandle>
+  <div class="title">
+    <div class="name">{{ data.appName }}</div>
+    <div class="meta muted">PID: {{ data.pid || '—' }}</div>
+  </div>
+
+  <div class="actions">
+    <button mat-stroked-button class="btn btn-sm" (click)="clear()">
+      <mat-icon>delete</mat-icon>
+      Clear
+    </button>
+
+    <button mat-stroked-button class="btn btn-sm" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </div>
+</div>
+
+<cdk-virtual-scroll-viewport class="viewport" itemSize="18" minBufferPx="400" maxBufferPx="1200">
+  <div class="line"
+       [class.err]="l.isErrorBlock"
+       *cdkVirtualFor="let l of (lines$ | async); trackBy: trackByIndex">
+
+    <span class="ln">{{ l.no }}</span>
+
+    <span class="txt">
+      <ng-container *ngFor="let s of l.segs">
+        <span [class]="s.cls">{{ s.text }}</span>
+      </ng-container>
+    </span>
+  </div>
+</cdk-virtual-scroll-viewport>
