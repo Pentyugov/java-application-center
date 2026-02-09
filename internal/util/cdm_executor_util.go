@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strconv"
 	"strings"
 	"syscall"
@@ -35,22 +34,30 @@ func RunApplication(appInfo *domain.ApplicationInfo) (*CommandResult, error) {
 		return nil, fmt.Errorf("appInfo.Path is empty")
 	}
 
-	inner := buildInnerCmd(appInfo)
-	cmd := exec.Command("cmd.exe", "/C", "start", "", "/min", "cmd", "/K", inner)
+	jarPath := appInfo.Path
+	javaArgs := buildJavaArgs(appInfo.AppArguments, jarPath)
+	inner := buildCmdInnerLine("java", javaArgs)
 
+	cmd := exec.Command("cmd.exe", "/C", "start", "", "/min", "cmd.exe", "/K", inner)
 	cmd.Env = append(os.Environ(), toEnvList(appInfo.EnvVariables)...)
+	cmd.Dir = filepath.Dir(jarPath)
+
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow: true,
+	}
 
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("failed to start app %s: %w", appInfo.AppName, err)
 	}
 
 	return &CommandResult{
-		Path:    appInfo.Path,
+		Path:    jarPath,
 		PID:     cmd.Process.Pid,
 		Started: time.Now(),
 	}, nil
 }
 
+// RunApplicationSilent - запускает java БЕЗ окна, stdout/stderr в лог.
 func RunApplicationSilent(appInfo *domain.ApplicationInfo) (*CommandResult, error) {
 	if appInfo == nil {
 		return nil, fmt.Errorf("appInfo is nil")
@@ -83,22 +90,18 @@ func RunApplicationSilent(appInfo *domain.ApplicationInfo) (*CommandResult, erro
 		}
 	}()
 
-	args := make([]string, 0, len(appInfo.AppArguments)+2)
-	args = append(args, appInfo.AppArguments...)
-	args = append(args, "-jar", jarPath)
+	javaArgs := buildJavaArgs(appInfo.AppArguments, jarPath)
 
-	cmd := exec.Command("java", args...)
+	cmd := exec.Command("java", javaArgs...)
 	cmd.Env = append(os.Environ(), toEnvList(appInfo.EnvVariables)...)
-	cmd.Dir = filepath.Dir(appInfo.Path)
+	cmd.Dir = filepath.Dir(jarPath)
 	cmd.Stdout = logFile
 	cmd.Stderr = logFile
 
-	if runtime.GOOS == "windows" {
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow: true,
-			CreationFlags: windows.CREATE_NO_WINDOW |
-				windows.DETACHED_PROCESS,
-		}
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow: true,
+		CreationFlags: windows.CREATE_NO_WINDOW |
+			windows.DETACHED_PROCESS,
 	}
 
 	if err := cmd.Start(); err != nil {
@@ -114,19 +117,79 @@ func RunApplicationSilent(appInfo *domain.ApplicationInfo) (*CommandResult, erro
 	}, nil
 }
 
-func buildInnerCmd(appInfo *domain.ApplicationInfo) string {
-	var b strings.Builder
-	b.WriteString("chcp 1251 & ")
-	b.WriteString("java")
+// buildJavaArgs строит аргументы для "java" корректно.
+// На вход можно дать как ["--add-opens java.base/java.lang=ALL-UNNAMED"] (одна строка),
+// так и ["--add-opens", "java.base/java.lang=ALL-UNNAMED"] — на выходе будет правильно.
+func buildJavaArgs(appArgs []string, jarPath string) []string {
+	normalized := normalizeJvmArgs(appArgs)
 
-	if len(appInfo.AppArguments) > 0 {
+	args := make([]string, 0, len(normalized)+2)
+	args = append(args, normalized...)
+	args = append(args, "-jar", jarPath)
+	return args
+}
+
+func normalizeJvmArgs(appArgs []string) []string {
+	out := make([]string, 0, len(appArgs))
+	for _, a := range appArgs {
+		a = strings.TrimSpace(a)
+		if a == "" {
+			continue
+		}
+
+		if !strings.ContainsAny(a, " \t") {
+			out = append(out, a)
+			continue
+		}
+
+		parts := strings.Fields(a)
+		out = append(out, parts...)
+	}
+	return out
+}
+
+func buildCmdInnerLine(exe string, args []string) string {
+	var b strings.Builder
+	b.WriteString("chcp 1251 >nul & ")
+
+	b.WriteString(escapeCmdArg(exe))
+	for _, a := range args {
 		b.WriteString(" ")
-		b.WriteString(strings.Join(appInfo.AppArguments, " "))
+		b.WriteString(escapeCmdArg(a))
+	}
+	return b.String()
+}
+
+func escapeCmdArg(s string) string {
+	if s == "" {
+		return `""`
 	}
 
-	b.WriteString(" -jar ")
-	b.WriteString(appInfo.Path)
-	fmt.Println(b.String())
+	needsQuotes := strings.ContainsAny(s, " \t&|<>()^\"%!")
+
+	var b strings.Builder
+	if needsQuotes {
+		b.WriteByte('"')
+	}
+
+	for i := 0; i < len(s); i++ {
+		ch := s[i]
+		switch ch {
+		case '^', '&', '|', '<', '>', '(', ')', '!':
+			b.WriteByte('^')
+			b.WriteByte(ch)
+		case '"':
+			b.WriteString(`^"`)
+		case '%':
+			b.WriteString("%%")
+		default:
+			b.WriteByte(ch)
+		}
+	}
+
+	if needsQuotes {
+		b.WriteByte('"')
+	}
 	return b.String()
 }
 
@@ -137,7 +200,6 @@ func toEnvList(vars []domain.EnvVariable) []string {
 		if name == "" {
 			continue
 		}
-		// Windows env: NAME=VALUE
 		out = append(out, name+"="+v.Value)
 	}
 	return out
@@ -151,11 +213,9 @@ func ListJavaProcesses() ([]JavaProcessInfo, error) {
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 
-	if runtime.GOOS == "windows" {
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow:    true,
-			CreationFlags: windows.CREATE_NO_WINDOW,
-		}
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow:    true,
+		CreationFlags: windows.CREATE_NO_WINDOW,
 	}
 
 	if err := cmd.Run(); err != nil {
@@ -209,11 +269,8 @@ func StopProcess(pid int) error {
 	if err != nil {
 		return fmt.Errorf("failed to open process %d: %w", pid, err)
 	}
-
 	defer func() {
-		if cErr := windows.CloseHandle(handle); cErr != nil {
-			fmt.Printf("warning: failed to close handle for pid %d: %v\n", pid, cErr)
-		}
+		_ = windows.CloseHandle(handle)
 	}()
 
 	if err := windows.TerminateProcess(handle, 1); err != nil {
