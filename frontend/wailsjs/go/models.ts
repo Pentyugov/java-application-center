@@ -36,6 +36,7 @@ export namespace domain {
 	    appName: string;
 	    envVariables: EnvVariable[];
 	    appArguments: string[];
+	    baseDir: string;
 	    path: string;
 	    gitPath: string;
 	    startOrder: number;
@@ -50,6 +51,7 @@ export namespace domain {
 	        this.appName = source["appName"];
 	        this.envVariables = this.convertValues(source["envVariables"], EnvVariable);
 	        this.appArguments = source["appArguments"];
+	        this.baseDir = source["baseDir"];
 	        this.path = source["path"];
 	        this.gitPath = source["gitPath"];
 	        this.startOrder = source["startOrder"];
@@ -145,6 +147,7 @@ export namespace dto {
 	    appName: string;
 	    envVariables: EnvVariableDTO[];
 	    appArguments: string[];
+	    baseDir: string;
 	    path: string;
 	    gitPath: string;
 	    startOrder: number;
@@ -160,6 +163,7 @@ export namespace dto {
 	        this.appName = source["appName"];
 	        this.envVariables = this.convertValues(source["envVariables"], EnvVariableDTO);
 	        this.appArguments = source["appArguments"];
+	        this.baseDir = source["baseDir"];
 	        this.path = source["path"];
 	        this.gitPath = source["gitPath"];
 	        this.startOrder = source["startOrder"];
@@ -218,6 +222,20 @@ export namespace dto {
 		}
 	}
 	
+	export class PickBaseApplicationFolderDTO {
+	    baseDir: string;
+	    jarPaths: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new PickBaseApplicationFolderDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.baseDir = source["baseDir"];
+	        this.jarPaths = source["jarPaths"];
+	    }
+	}
 	export class RunningProcessDTO {
 	    path: string;
 	    pid: number;

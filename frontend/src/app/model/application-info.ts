@@ -4,6 +4,7 @@ export class ApplicationInfo {
   appName: string;
   envVariables: EnvVariable[];
   appArguments: string[];
+  baseDir: string;
   path: string;
   gitPath: string;
   startOrder: number;
@@ -12,6 +13,7 @@ export class ApplicationInfo {
 
   constructor() {
     this.appName = '';
+    this.baseDir = '';
     this.path = '';
     this.gitPath = '';
     this.envVariables = [];

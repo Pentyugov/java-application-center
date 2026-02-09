@@ -391,7 +391,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 {
                     width: '720px',
                     panelClass: 'solid-dialog',
-                    data: {title: `Добавить приложение"`}
+                    data: {title: `Добавить приложение`}
                 }
         );
 

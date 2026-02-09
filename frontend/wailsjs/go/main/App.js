@@ -22,6 +22,10 @@ export function GetSettings() {
   return window['go']['main']['App']['GetSettings']();
 }
 
+export function PickBaseApplicationFolder() {
+  return window['go']['main']['App']['PickBaseApplicationFolder']();
+}
+
 export function PickCentralInfoFolder() {
   return window['go']['main']['App']['PickCentralInfoFolder']();
 }

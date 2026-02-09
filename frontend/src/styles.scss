@@ -1,278 +1,426 @@
 @import 'ngx-toastr/toastr';
 
+/* =======================
+   Design tokens
+   ======================= */
 :root {
-  --bg: #0b1220;
+    --bg: #0b1220;
 
-  --text: rgba(255, 255, 255, 0.92);
-  --muted: rgba(255, 255, 255, 0.62);
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.62);
 
-  /* Cards */
-  --card: rgba(255, 255, 255, 0.06);
-  --cardBorder: rgba(255, 255, 255, 0.12);
+    /* Cards */
+    --card: rgba(255, 255, 255, 0.06);
+    --cardBorder: rgba(255, 255, 255, 0.12);
 
-  --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+
+    /* Controls */
+    --accent: rgba(59, 130, 246, 0.90);
+    --accentSoft: rgba(59, 130, 246, 0.20);
+
+    --controlBorder: rgba(255, 255, 255, 0.20);
+    --controlBorderHover: rgba(59, 130, 246, 0.40);
+
+    --controlText: rgba(255, 255, 255, 0.88);
+    --controlTextMuted: rgba(255, 255, 255, 0.70);
 }
 
 html,
 body {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background:
-    radial-gradient(1100px 620px at 20% 12%, rgba(59, 130, 246, 0.18), transparent 62%),
-    radial-gradient(900px 520px at 85% 18%, rgba(168, 85, 247, 0.14), transparent 58%),
-    radial-gradient(900px 700px at 55% 92%, rgba(34, 197, 94, 0.10), transparent 60%),
-    var(--bg);
-  color: var(--text);
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background:
+            radial-gradient(1100px 620px at 20% 12%, rgba(59, 130, 246, 0.18), transparent 62%),
+            radial-gradient(900px 520px at 85% 18%, rgba(168, 85, 247, 0.14), transparent 58%),
+            radial-gradient(900px 700px at 55% 92%, rgba(34, 197, 94, 0.10), transparent 60%),
+            var(--bg);
+    color: var(--text);
 }
 
 .muted {
-  color: var(--muted);
+    color: var(--muted);
 }
 
 .break {
-  word-break: break-word;
+    word-break: break-word;
 }
 
+/* =======================
+   Dialogs (solid / log)
+   ======================= */
 .cdk-overlay-pane.solid-dialog {
-  max-width: none !important;
-  max-height: none !important;
+    max-width: none !important;
+    max-height: none !important;
 }
 
 .cdk-overlay-pane.solid-dialog .mdc-dialog__surface {
-  background-color: rgba(20, 28, 44, 0.96) !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,0.14);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.60);
-  color: rgba(255,255,255,0.92) !important;
+    background-color: rgba(20, 28, 44, 0.96) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.60);
+    color: rgba(255, 255, 255, 0.92) !important;
 
-  resize: both;
-  overflow: auto;
+    resize: both;
+    overflow: auto;
 
-  min-width: 720px;
-  min-height: 220px;
+    min-width: 720px;
+    min-height: 220px;
 
-  max-width: none !important;
-  max-height: none !important;
+    max-width: none !important;
+    max-height: none !important;
 }
 
 .cdk-overlay-pane.solid-dialog .mat-mdc-dialog-title,
 .cdk-overlay-pane.solid-dialog .mdc-dialog__title {
-  color: rgba(255, 255, 255, 0.96) !important;
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
+    color: rgba(255, 255, 255, 0.96) !important;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.2px;
 }
 
 .cdk-overlay-pane.solid-dialog .mdc-dialog__content {
-  color: rgba(255, 255, 255, 0.78) !important;
-  font-size: 14px;
+    color: rgba(255, 255, 255, 0.78) !important;
+    font-size: 14px;
 }
 
 .cdk-overlay-pane.solid-dialog .mdc-dialog__actions {
-  padding-top: 16px;
+    padding-top: 16px;
 }
 
 .cdk-overlay-pane.solid-dialog .mat-mdc-form-field {
-  width: 100%;
+    width: 100%;
 }
 
 .cdk-overlay-pane.solid-dialog .mdc-text-field--outlined {
-  background-color: rgba(7, 12, 22, 0.55);
-  border-radius: 10px;
+    background-color: rgba(7, 12, 22, 0.55);
+    border-radius: 10px;
 }
 
 .cdk-overlay-pane.solid-dialog .mdc-notched-outline__leading,
 .cdk-overlay-pane.solid-dialog .mdc-notched-outline__notch,
 .cdk-overlay-pane.solid-dialog .mdc-notched-outline__trailing {
-  border-color: rgba(255, 255, 255, 0.22) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
 }
 
 .cdk-overlay-pane.solid-dialog .mdc-floating-label,
 .cdk-overlay-pane.solid-dialog .mat-mdc-floating-label {
-  color: rgba(255, 255, 255, 0.62) !important;
+    color: rgba(255, 255, 255, 0.62) !important;
 }
 
 .cdk-overlay-pane.solid-dialog input.mat-mdc-input-element {
-  color: rgba(255, 255, 255, 0.92) !important;
-  font-size: 15px;
+    color: rgba(255, 255, 255, 0.92) !important;
+    font-size: 15px;
 }
 
 .cdk-overlay-pane.solid-dialog button.mat-mdc-raised-button:disabled,
 .cdk-overlay-pane.solid-dialog button.mat-mdc-unelevated-button:disabled,
 .cdk-overlay-pane.solid-dialog button.mat-mdc-outlined-button:disabled,
 .cdk-overlay-pane.solid-dialog button.mat-mdc-button:disabled {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 .cdk-overlay-pane.solid-dialog button.mat-mdc-raised-button.mat-primary:disabled,
 .cdk-overlay-pane.solid-dialog button.mat-mdc-unelevated-button.mat-primary:disabled {
-  background-color: rgba(255, 255, 255, 0.10) !important;
-  color: rgba(255, 255, 255, 0.50) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.10) !important;
+    color: rgba(255, 255, 255, 0.50) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    box-shadow: none !important;
 }
 
 .cdk-overlay-pane.solid-dialog button.mat-mdc-raised-button.mat-primary:disabled .mdc-button__label,
 .cdk-overlay-pane.solid-dialog button.mat-mdc-unelevated-button.mat-primary:disabled .mdc-button__label {
-  color: rgba(255, 255, 255, 0.50) !important;
+    color: rgba(255, 255, 255, 0.50) !important;
 }
 
 .cdk-overlay-pane.solid-dialog .settings-toggle {
-  --mdc-switch-selected-track-color: rgba(59, 130, 246, 0.18);
-  --mdc-switch-selected-hover-track-color: rgba(59, 130, 246, 0.22);
-  --mdc-switch-selected-focus-track-color: rgba(59, 130, 246, 0.22);
-  --mdc-switch-selected-pressed-track-color: rgba(59, 130, 246, 0.26);
+    --mdc-switch-selected-track-color: rgba(59, 130, 246, 0.18);
+    --mdc-switch-selected-hover-track-color: rgba(59, 130, 246, 0.22);
+    --mdc-switch-selected-focus-track-color: rgba(59, 130, 246, 0.22);
+    --mdc-switch-selected-pressed-track-color: rgba(59, 130, 246, 0.26);
 
-  --mdc-switch-unselected-track-color: rgba(255, 255, 255, 0.10);
-  --mdc-switch-unselected-hover-track-color: rgba(255, 255, 255, 0.14);
-  --mdc-switch-unselected-focus-track-color: rgba(255, 255, 255, 0.14);
-  --mdc-switch-unselected-pressed-track-color: rgba(255, 255, 255, 0.16);
+    --mdc-switch-unselected-track-color: rgba(255, 255, 255, 0.10);
+    --mdc-switch-unselected-hover-track-color: rgba(255, 255, 255, 0.14);
+    --mdc-switch-unselected-focus-track-color: rgba(255, 255, 255, 0.14);
+    --mdc-switch-unselected-pressed-track-color: rgba(255, 255, 255, 0.16);
 
-  --mdc-switch-selected-handle-color: rgba(59, 130, 246, 0.85);
-  --mdc-switch-selected-hover-handle-color: rgba(59, 130, 246, 1);
-  --mdc-switch-selected-focus-handle-color: rgba(59, 130, 246, 1);
-  --mdc-switch-selected-pressed-handle-color: rgba(59, 130, 246, 1);
+    --mdc-switch-selected-handle-color: rgba(59, 130, 246, 0.85);
+    --mdc-switch-selected-hover-handle-color: rgba(59, 130, 246, 1);
+    --mdc-switch-selected-focus-handle-color: rgba(59, 130, 246, 1);
+    --mdc-switch-selected-pressed-handle-color: rgba(59, 130, 246, 1);
 
-  --mdc-switch-unselected-handle-color: rgba(255, 255, 255, 0.75);
-  --mdc-switch-unselected-hover-handle-color: rgba(255, 255, 255, 0.85);
-  --mdc-switch-unselected-focus-handle-color: rgba(255, 255, 255, 0.85);
-  --mdc-switch-unselected-pressed-handle-color: rgba(255, 255, 255, 0.9);
+    --mdc-switch-unselected-handle-color: rgba(255, 255, 255, 0.75);
+    --mdc-switch-unselected-hover-handle-color: rgba(255, 255, 255, 0.85);
+    --mdc-switch-unselected-focus-handle-color: rgba(255, 255, 255, 0.85);
+    --mdc-switch-unselected-pressed-handle-color: rgba(255, 255, 255, 0.9);
 
-  --mdc-switch-selected-hover-state-layer-color: rgba(59, 130, 246, 0.35);
-  --mdc-switch-selected-focus-state-layer-color: rgba(59, 130, 246, 0.35);
-  --mdc-switch-selected-pressed-state-layer-color: rgba(59, 130, 246, 0.35);
+    --mdc-switch-selected-hover-state-layer-color: rgba(59, 130, 246, 0.35);
+    --mdc-switch-selected-focus-state-layer-color: rgba(59, 130, 246, 0.35);
+    --mdc-switch-selected-pressed-state-layer-color: rgba(59, 130, 246, 0.35);
 
-  --mdc-switch-unselected-hover-state-layer-color: rgba(255, 255, 255, 0.20);
-  --mdc-switch-unselected-focus-state-layer-color: rgba(255, 255, 255, 0.20);
-  --mdc-switch-unselected-pressed-state-layer-color: rgba(255, 255, 255, 0.20);
+    --mdc-switch-unselected-hover-state-layer-color: rgba(255,  255, 255, 0.20);
+    --mdc-switch-unselected-focus-state-layer-color: rgba(255, 255, 255, 0.20);
+    --mdc-switch-unselected-pressed-state-layer-color: rgba(255, 255, 255, 0.20);
 
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 750;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 750;
 }
 
 .cdk-overlay-pane.log-dialog .mdc-dialog__surface {
-  resize: both !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  min-width: 720px;
-  min-height: 360px;
-  max-width: none !important;
-  max-height: none !important;
-  box-sizing: border-box;
+    resize: both !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    min-width: 720px;
+    min-height: 360px;
+    max-width: none !important;
+    max-height: none !important;
+    box-sizing: border-box;
 }
 
 .cdk-overlay-pane.log-dialog .mdc-dialog__content {
-  overflow: hidden !important;
-  padding: 0 !important;
-  box-sizing: border-box;
+    overflow: hidden !important;
+    padding: 0 !important;
+    box-sizing: border-box;
 }
 
-.git-branch-panel {
+/* =======================
+   Global Material FormField / Input / Select (MDC)
+   ======================= */
 
-  background: rgba(43,43,66) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 22px 60px rgba(0,0,0,0.55) !important;
-  overflow: auto !important;
-  padding: 6px 6px !important;
+/* All mat-form-field should stretch nicely */
+.mat-mdc-form-field {
+    width: 100%;
 }
 
-.git-branch-panel .mat-mdc-option {
-  border-radius: 10px;
-  color: rgba(255,255,255,0.88) !important;
-  min-height: 36px !important;
+/* Outline field surface */
+.mat-mdc-form-field .mdc-text-field--outlined {
+    background: rgba(7, 12, 22, 0.55);
+    border-radius: 12px;
 }
 
-.git-branch-panel .mat-mdc-option:hover {
-  background: rgba(59,130,246,0.10) !important;
+/* Outline border */
+.mat-mdc-form-field .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
-.git-branch-panel .mat-mdc-option.mdc-list-item--selected {
-  background: rgba(59,130,246,0.16) !important;
+/* Hover border */
+.mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+    border-color: rgba(59, 130, 246, 0.30) !important;
 }
 
-.git-branch-panel .mat-mdc-option.git-sep {
-  opacity: 1 !important;
-  cursor: default !important;
-  pointer-events: none !important;
-  background: transparent !important;
-  height: 26px !important;
-  min-height: 26px !important;
-  padding: 0 8px !important;
+/* Focus border (MDC often adds focused class) */
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+    border-color: rgba(59, 130, 246, 0.45) !important;
 }
 
-.git-branch-panel .mat-mdc-option.git-sep .mdc-list-item__primary-text {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: rgba(255,255,255,0.55) !important;
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: .3px;
-  text-transform: uppercase;
+/* Labels */
+.mat-mdc-form-field .mdc-floating-label,
+.mat-mdc-form-field .mat-mdc-floating-label {
+    color: rgba(255, 255, 255, 0.62) !important;
 }
 
-.git-branch-panel .mat-mdc-option.git-sep .mdc-list-item__primary-text::before,
-.git-branch-panel .mat-mdc-option.git-sep .mdc-list-item__primary-text::after {
-  content: "";
-  flex: 1 1 auto;
-  height: 1px;
-  background: rgba(255,255,255,0.10);
+/* Inputs */
+.mat-mdc-form-field input.mat-mdc-input-element,
+.mat-mdc-form-field textarea.mat-mdc-input-element {
+    color: rgba(255, 255, 255, 0.92) !important;
+    font-size: 15px;
 }
 
-.git-branch-panel .git-sep-text {
-  flex: 0 0 auto;
-  padding: 0 2px;
+/* Select value + placeholder */
+.mat-mdc-form-field .mat-mdc-select-value {
+    color: rgba(255, 255, 255, 0.90) !important;
+}
+.mat-mdc-form-field .mat-mdc-select-placeholder {
+    color: rgba(255, 255, 255, 0.55) !important;
 }
 
-.git-branch-panel::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+/* Select arrow */
+.mat-mdc-form-field .mat-mdc-select-arrow {
+    color: var(--accent) !important;
 }
 
-.git-branch-panel::-webkit-scrollbar-track {
-  background: rgba(7, 12, 22, 0.55);
-  border-radius: 999px;
+/* =======================
+   Global Select Panel (Overlay)
+   ======================= */
+
+.cdk-overlay-pane .mat-mdc-select-panel {
+    background: rgba(43, 43, 66, 0.98) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55) !important;
+    overflow: auto !important;
+    padding: 6px !important;
+
+    max-height: 420px !important;
 }
 
-.git-branch-panel::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.28);
-  border: 2px solid rgba(7, 12, 22, 0.55);
-  border-radius: 999px;
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option {
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.88) !important;
+    min-height: 36px !important;
 }
 
-.git-branch-panel::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.40);
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option:hover {
+    background: rgba(59, 130, 246, 0.10) !important;
 }
 
-.git-branch-panel::-webkit-scrollbar-corner {
-  background: rgba(7, 12, 22, 0.55);
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected {
+    background: rgba(59, 130, 246, 0.18) !important;
 }
 
-.git-branch-panel .mat-mdc-option.mdc-list-item--selected {
-  background: rgba(59,130,246,0.18) !important;
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 800;
 }
 
-.git-branch-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
-  color: rgba(255,255,255,0.95) !important;
-  font-weight: 800;
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__end,
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected mat-pseudo-checkbox,
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected .mat-mdc-option-pseudo-checkbox {
+    color: rgba(255, 255, 255, 0.95) !important;
 }
 
-.git-branch-panel .mat-mdc-option.mdc-list-item--selected .mdc-list-item__end,
-.git-branch-panel .mat-mdc-option.mdc-list-item--selected mat-pseudo-checkbox,
-.git-branch-panel .mat-mdc-option.mdc-list-item--selected .mat-mdc-option-pseudo-checkbox {
-  color: rgba(255,255,255,0.95) !important;
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mat-mdc-option-active {
+    background: rgba(59, 130, 246, 0.12) !important;
 }
 
-.git-branch-panel .mat-mdc-option.mat-mdc-option-active {
-  background: rgba(59,130,246,0.12) !important;
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.mat-mdc-option-active .mdc-list-item__primary-text {
+    color: rgba(255, 255, 255, 0.95) !important;
 }
 
-.git-branch-panel .mat-mdc-option.mat-mdc-option-active .mdc-list-item__primary-text {
-  color: rgba(255,255,255,0.95) !important;
+/* Scrollbar for overlay panels */
+.cdk-overlay-pane .mat-mdc-select-panel::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel::-webkit-scrollbar-track {
+    background: rgba(7, 12, 22, 0.55);
+    border-radius: 999px;
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.28);
+    border: 2px solid rgba(7, 12, 22, 0.55);
+    border-radius: 999px;
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.40);
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel::-webkit-scrollbar-corner {
+    background: rgba(7, 12, 22, 0.55);
+}
+
+/* Optional: separator options (like your git-sep) if used anywhere */
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.git-sep {
+    opacity: 1 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    background: transparent !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    padding: 0 8px !important;
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.git-sep .mdc-list-item__primary-text {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.55) !important;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.git-sep .mdc-list-item__primary-text::before,
+.cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.git-sep .mdc-list-item__primary-text::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.10);
+}
+
+/* =======================
+   Global Material Radio (MDC)
+   ======================= */
+.mat-mdc-radio-group {
+    color: var(--controlText);
+}
+
+.mat-mdc-radio-button {
+    --mdc-form-field-label-text-color: var(--controlText);
+
+    --mdc-radio-unselected-icon-color: var(--controlBorder);
+    --mdc-radio-unselected-hover-icon-color: var(--controlBorderHover);
+    --mdc-radio-unselected-focus-icon-color: var(--controlBorderHover);
+    --mdc-radio-unselected-pressed-icon-color: var(--controlBorderHover);
+
+    --mdc-radio-selected-icon-color: var(--controlBorderHover);
+    --mdc-radio-selected-hover-icon-color: var(--controlBorderHover);
+    --mdc-radio-selected-focus-icon-color: var(--controlBorderHover);
+    --mdc-radio-selected-pressed-icon-color: var(--controlBorderHover);
+
+    --mat-mdc-radio-ripple-color: rgba(255, 255, 255, 0.20);
+    --mat-mdc-radio-checked-ripple-color: var(--accentSoft);
+
+    --mdc-radio-disabled-unselected-icon-color: rgba(255, 255, 255, 0.18);
+    --mdc-radio-disabled-selected-icon-color: rgba(59, 130, 246, 0.22);
+}
+
+.mat-mdc-radio-button .mdc-form-field {
+    align-items: flex-start;
+}
+
+.mat-mdc-radio-button .mdc-label {
+    color: var(--controlText);
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+.mat-mdc-radio-button:hover .mdc-form-field {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+
+.mat-mdc-radio-button.mat-mdc-radio-checked .mdc-form-field {
+    background: rgba(59, 130, 246, 0.08);
+    border-radius: 10px;
+}
+
+.mat-mdc-radio-button .mdc-form-field > label {
+    padding: 6px 10px 6px 2px;
+}
+
+.mat-mdc-radio-button .mdc-radio__background {
+    filter: saturate(1.05);
+}
+
+/* Fix: Material theme (.mat-accent/.mat-primary/.mat-warn) overrides selected color */
+.mat-mdc-radio-button.mat-accent,
+.mat-mdc-radio-button.mat-primary,
+.mat-mdc-radio-button.mat-warn {
+    --mdc-radio-selected-icon-color: var(--controlBorderHover) !important;
+    --mdc-radio-selected-hover-icon-color: var(--controlBorderHover) !important;
+    --mdc-radio-selected-focus-icon-color: var(--controlBorderHover) !important;
+    --mdc-radio-selected-pressed-icon-color: var(--controlBorderHover) !important;
+
+    --mdc-radio-unselected-icon-color: var(--controlBorder) !important;
+    --mdc-radio-unselected-hover-icon-color: var(--controlBorderHover) !important;
+    --mdc-radio-unselected-focus-icon-color: var(--controlBorderHover) !important;
+    --mdc-radio-unselected-pressed-icon-color: var(--controlBorderHover) !important;
+
+    --mat-mdc-radio-checked-ripple-color: var(--accentSoft) !important;
 }

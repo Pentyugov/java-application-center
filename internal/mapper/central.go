@@ -40,6 +40,7 @@ func ToApplicationInfoDTO(ai *domain.ApplicationInfo) dto.ApplicationInfoDTO {
 		AppName:      ai.AppName,
 		EnvVariables: evDTOs,
 		AppArguments: ai.AppArguments,
+		BaseDir:      ai.BaseDir,
 		Path:         ai.Path,
 		GitPath:      ai.GitPath,
 		StartOrder:   ai.StartOrder,
@@ -84,7 +85,9 @@ func ToApplicationInfo(ai dto.ApplicationInfoDTO) domain.ApplicationInfo {
 		AppName:      ai.AppName,
 		EnvVariables: evs,
 		AppArguments: ai.AppArguments,
+		BaseDir:      ai.BaseDir,
 		Path:         ai.Path,
+		GitPath:      ai.GitPath,
 		StartOrder:   ai.StartOrder,
 		IsActive:     ai.IsActive,
 	}

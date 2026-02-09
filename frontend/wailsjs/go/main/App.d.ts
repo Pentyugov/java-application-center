@@ -14,6 +14,8 @@ export function GetRunningProcesses():Promise<Array<dto.RunningProcessDTO>>;
 
 export function GetSettings():Promise<domain.AppSettings>;
 
+export function PickBaseApplicationFolder():Promise<dto.PickBaseApplicationFolderDTO>;
+
 export function PickCentralInfoFolder():Promise<string>;
 
 export function PickGitFolder(arg1:string):Promise<string>;

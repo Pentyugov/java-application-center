@@ -14,6 +14,7 @@ type ApplicationInfo struct {
 	AppName      string        `json:"appName"`
 	EnvVariables []EnvVariable `json:"envVariables"`
 	AppArguments []string      `json:"appArguments"`
+	BaseDir      string        `json:"baseDir"`
 	Path         string        `json:"path"`
 	GitPath      string        `json:"gitPath"`
 	StartOrder   uint8         `json:"startOrder"`

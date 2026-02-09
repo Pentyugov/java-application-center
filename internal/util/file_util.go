@@ -2,12 +2,15 @@ package util
 
 import (
 	"central-desktop/internal/domain"
+	"central-desktop/internal/dto"
 	"context"
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -91,6 +94,32 @@ func PickGitFolder(ctx context.Context, appDir string) (string, error) {
 	}
 
 	return path, nil
+
+}
+
+func PickBaseApplicationFolder(ctx context.Context) (*dto.PickBaseApplicationFolderDTO, error) {
+	baseDir, err := runtime.OpenDirectoryDialog(ctx, runtime.OpenDialogOptions{
+		Title: "Выберите папку c .git",
+	})
+	if err != nil {
+		return nil, err
+	}
+	if baseDir == "" {
+		return nil, nil
+	}
+
+	jarPaths, err := ScanJars(baseDir)
+	if err != nil {
+		return nil, err
+	}
+	if len(jarPaths) < 1 {
+		return nil, errors.New("в выбранной директории не найдено ни одного .jar файла")
+	}
+
+	return &dto.PickBaseApplicationFolderDTO{
+		BaseDir:  baseDir,
+		JarPaths: jarPaths,
+	}, nil
 
 }
 
@@ -211,6 +240,39 @@ func RemoveFile(pathToFile string) error {
 		time.Sleep(delay)
 	}
 	return fmt.Errorf("не удалось удалить файл логов: %s после %d попыток: %w", pathToFile, attempts, lastErr)
+}
+
+func ScanJars(baseDir string) ([]string, error) {
+	if baseDir == "" {
+		return nil, fmt.Errorf("baseDir is empty")
+	}
+
+	var jars []string
+
+	err := filepath.WalkDir(baseDir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		if strings.EqualFold(filepath.Ext(d.Name()), ".jar") {
+			absPath, absErr := filepath.Abs(path)
+			if absErr != nil {
+				return absErr
+			}
+			jars = append(jars, absPath)
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("scan jars in %s: %w", baseDir, err)
+	}
+
+	return jars, nil
 }
 
 func GetLogFileName(appName string) string {
