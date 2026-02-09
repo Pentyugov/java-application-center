@@ -1,0 +1,147 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 8px 12px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 900;
+  font-size: 16px;
+  color: rgba(255,255,255,0.92);
+}
+
+.meta {
+  font-size: 12.5px;
+}
+
+.actions {
+  display: inline-flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.line {
+  display: flex;
+  gap: 10px;
+  padding: 0 10px;
+  white-space: pre;
+}
+
+.ln {
+  flex: 0 0 64px;
+  text-align: right;
+  padding-right: 10px;
+  color: rgba(148, 163, 184, 0.55);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  user-select: none;
+}
+
+.txt {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.line.err .txt {
+  color: rgba(244, 135, 113, 0.95);
+}
+
+.line.err .txt .c-reset {
+  color: rgba(244, 135, 113, 0.95);
+}
+
+.ts {
+  color: rgba(106, 153, 85, 0.95);
+  flex: 0 0 auto;
+}
+
+.lvl {
+  flex: 0 0 74px;
+  opacity: 0.95;
+}
+
+.lvl[data-level="ERROR"] { color: rgba(244, 135, 113, 0.98); }
+.lvl[data-level="WARN"]  { color: rgba(204, 167, 0, 0.98); }
+.lvl[data-level="INFO"]  { color: rgba(79, 193, 255, 0.98); }
+.lvl[data-level="DEBUG"] { color: rgba(181, 206, 168, 0.98); }
+.lvl[data-level="TRACE"] { color: rgba(197, 134, 192, 0.98); }
+.lvl[data-level="UNKNOWN"] { color: rgba(156, 220, 254, 0.75); }
+
+.msg {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+:host ::-webkit-scrollbar-track {
+  background: rgba(7, 12, 22, 0.55);
+  border-radius: 999px;
+}
+
+:host ::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.28);
+  border: 2px solid rgba(7, 12, 22, 0.55);
+  border-radius: 999px;
+}
+
+:host ::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.40);
+}
+
+:host ::-webkit-scrollbar-corner {
+  background: rgba(7, 12, 22, 0.55);
+}
+
+.c-reset { color: rgba(255,255,255,0.88); }
+
+.c-30 { color: rgba(0,0,0,0.85); }
+.c-31 { color: rgba(244, 135, 113, 0.98); }  /* red */
+.c-32 { color: rgba(181, 206, 168, 0.98); }  /* green */
+.c-33 { color: rgba(204, 167, 0, 0.98); }    /* yellow */
+.c-34 { color: rgba(79, 193, 255, 0.98); }   /* blue/cyan-ish */
+.c-35 { color: rgba(197, 134, 192, 0.98); }  /* magenta */
+.c-36 { color: rgba(156, 220, 254, 0.98); }  /* cyan */
+.c-37 { color: rgba(220, 220, 220, 0.95); }  /* white */
+
+.c-90 { color: rgba(128, 128, 128, 0.95); }
+.c-91 { color: rgba(255, 120, 120, 0.98); }
+.c-92 { color: rgba(190, 240, 180, 0.98); }
+.c-93 { color: rgba(245, 220, 140, 0.98); }
+.c-94 { color: rgba(130, 180, 255, 0.98); }
+.c-95 { color: rgba(220, 160, 255, 0.98); }
+.c-96 { color: rgba(140, 220, 255, 0.98); }
+.c-97 { color: rgba(245, 245, 245, 0.98); }

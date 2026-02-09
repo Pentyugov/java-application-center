@@ -1,0 +1,332 @@
+<!-- Applications -->
+<div class="page">
+
+
+  <div class="panel">
+    <ng-container>
+
+      <div class="apps-layout">
+        <!-- LEFT: list -->
+        <div class="apps-left card">
+
+          <div class="apps-left-head">
+            <div class="apps-left-title">Сервисы</div>
+
+            <button
+              mat-stroked-button
+              class="btn icon-btn settings-btn"
+              type="button"
+              aria-label="Настройки"
+              title="Настройки"
+              (click)="openSettingsDialog()"
+            >
+              <mat-icon>settings</mat-icon>
+            </button>
+          </div>
+
+          <div class="apps-left-actions">
+            <div class="apps-left-head">
+              <button mat-stroked-button class="btn btn-sm left-action-btn" type="button" [disabled]="centralInfo.applicationInfos.length <= 0" (click)="runAll()">
+                <mat-icon>play_arrow</mat-icon>
+                Запустить все
+              </button>
+
+              <button mat-stroked-button class="btn btn-sm left-action-btn" type="button" [disabled]="centralInfo.applicationInfos.length <= 0" (click)="stopAll()">
+                <mat-icon>stop</mat-icon>
+                Остановить все
+              </button>
+
+
+            </div>
+
+            <div class="apps-left-head">
+
+              <button mat-stroked-button class="btn btn-sm left-action-btn" type="button" (click)="openAddAppInfoDialog()">
+                <mat-icon>add</mat-icon>
+                Добавить
+              </button>
+
+              <button mat-stroked-button class="btn btn-sm left-action-btn" type="button" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
+                Обновить
+              </button>
+
+
+            </div>
+          </div>
+
+          <div
+            class="apps-list"
+            cdkDropList
+            [cdkDropListData]="centralInfo.applicationInfos"
+            (cdkDropListDropped)="onAppsDrop($event)"
+          >
+            <button
+              class="apps-item"
+              type="button"
+              cdkDrag
+              *ngFor="let a of centralInfo.applicationInfos; trackBy: trackByAppName"
+              [class.active]="a.appName === selectedAppName"
+              (click)="selectApp(a.appName)"
+            >
+              <span class="drag-handle" cdkDragHandle title="Перетащить">
+                <mat-icon>drag_indicator</mat-icon>
+              </span>
+
+              <span class="apps-item-badge" aria-hidden="true"></span>
+              <span class="apps-item-name">{{ a.appName }}</span>
+
+              <span class="apps-item-right">
+                <span class="apps-item-toggle" [class.on]="a.isActive" [class.off]="!a.isActive">
+                  <mat-icon>{{ a.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+                </span>
+
+                <span
+                  class="apps-item-status"
+                  [class.active]="a.pid > 0"
+                  [class.inactive]="a.pid <= 0"
+                  title="{{ a.pid > 0 ? 'Сервис запущен' : 'Сервис остановлен' }}"
+                ></span>
+              </span>
+
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: details -->
+        <div class="apps-right">
+          <ng-container *ngIf="selectedApp as app; else selectHint">
+            <div class="card app">
+              <div class="app-top">
+                <div class="app-title">
+                  <div class="app-title-text">{{ app.appName }}</div>
+                  <div class="muted break app-path">Путь: {{ app.path }}</div>
+                  <div class="muted break app-path">Git: {{ app.gitPath }}</div>
+                  <div class="muted break app-path">Порядковый номер запуска: {{ app.startOrder }}</div>
+                  <div *ngIf="app.pid > 0" class="muted break app-path">PID: {{ app.pid }}</div>
+                </div>
+
+                <div class="app-actions">
+                  <button mat-stroked-button class="btn btn-sm" type="button" (click)="runApp(app.appName)">
+                    <mat-icon>play_arrow</mat-icon>
+                    Run
+                  </button>
+
+                  <button mat-stroked-button class="btn btn-sm"
+                          (click)="openLogDialog(selectedApp!)"
+                          [disabled]="!selectedApp">
+                    <mat-icon>article</mat-icon>
+                    Log
+                  </button>
+
+                  <button *ngIf="app.pid > 0" mat-stroked-button class="btn btn-sm" type="button" (click)="stopApp(app.appName)">
+                    <mat-icon>stop</mat-icon>
+                    Stop
+                  </button>
+
+                  <button *ngIf="app.isActive"
+                    mat-stroked-button
+                    class="btn btn-sm"
+                    type="button"
+                    (click)="disable(app)"
+                  >
+                    <mat-icon>toggle_on</mat-icon>
+                    Деактивировать
+                  </button>
+
+                  <button *ngIf="!app.isActive"
+                          mat-stroked-button
+                          class="btn btn-sm"
+                          type="button"
+                          (click)="enable(app)"
+                  >
+                    <mat-icon>toggle_off</mat-icon>
+                    Активировать
+                  </button>
+
+                  <button mat-stroked-button class="btn btn-sm" type="button" (click)="cloneApp(app)">
+                    <mat-icon>content_copy</mat-icon>
+                    Дублировать
+                  </button>
+
+                  <button mat-stroked-button class="btn btn-sm" type="button" (click)="deleteAppInfo(app)">
+                    <mat-icon>delete</mat-icon>
+                    Удалить
+                  </button>
+
+                  <button mat-stroked-button class="btn btn-sm" type="button" (click)="openEditAppInfoDialog(app)">
+                    <mat-icon>edit</mat-icon>
+                    Редактировать
+                  </button>
+                </div>
+              </div>
+
+              <hr class="soft">
+
+              <!-- JVM -->
+              <div class="section">
+                <div class="section-header">
+                  <div class="section-title">
+                    <div class="section-title-text">JVM параметры</div>
+                  </div>
+
+                  <button mat-stroked-button class="btn btn-sm" type="button" (click)="openAddArgDialog(app)">
+                    <mat-icon>add</mat-icon>
+                    Добавить
+                  </button>
+                </div>
+
+                <div class="empty small" *ngIf="(app.appArguments?.length ?? 0) === 0">пока пусто</div>
+
+                <div class="table-wrap" *ngIf="(app.appArguments?.length ?? 0) > 0">
+                  <table class="table table-sm">
+                    <thead>
+                    <tr>
+                      <th>Наименование</th>
+                      <th class="col-action">Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let arg of app.appArguments; let i = index">
+                      <td class="break mono">{{ arg }}</td>
+                      <td>
+                        <div class="row-actions">
+                          <button mat-stroked-button class="btn icon-btn" type="button" (click)="deleteJvmArg(app, i)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+
+                          <button mat-stroked-button class="btn icon-btn" type="button" (click)="openEditArgInfoDialog(app, i)">
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- ENV -->
+              <div class="section">
+                <div class="section-header">
+                  <div class="section-title">
+                    <div class="section-title-text">Переменные окружения</div>
+                  </div>
+
+                  <button mat-stroked-button class="btn btn-sm" type="button" (click)="openAddEnvDialog(app)">
+                    <mat-icon>add</mat-icon>
+                    Добавить
+                  </button>
+                </div>
+
+                <div class="empty small" *ngIf="(app.envVariables?.length ?? 0) === 0">пока пусто</div>
+
+                <div class="table-wrap" *ngIf="(app.envVariables?.length ?? 0) > 0">
+                  <table class="table table-sm">
+                    <thead>
+                    <tr>
+                      <th class="col-name">Наименование</th>
+                      <th class="col-value">Значение</th>
+                      <th class="col-action">Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let env of app.envVariables; let i = index">
+                      <td class="break mono">{{ env.name }}</td>
+                      <td class="break mono">{{ env.value }}</td>
+                      <td>
+                        <div class="row-actions">
+                          <button mat-stroked-button class="btn icon-btn" type="button" (click)="deleteEnvVar(app, i)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+
+                          <button mat-stroked-button class="btn icon-btn" type="button" (click)="openEditEnvInfoDialog(env)">
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </ng-container>
+
+          <ng-template #selectHint>
+            <div class="card app empty-hint">
+              <div class="muted">Выберите приложение слева</div>
+            </div>
+          </ng-template>
+        </div>
+
+        @if (selectedApp) {
+          <div class="apps-side card">
+            <div class="apps-side-head">
+              <div class="apps-side-title">Git</div>
+
+              @if (selectedApp.gitPath.trim() === '') {
+                <button mat-stroked-button class="btn btn-sm" type="button" (click)="pickGitRepo()">
+                  <mat-icon>add</mat-icon>
+                  Подключить
+                </button>
+              } @else {
+                <button mat-stroked-button class="btn btn-sm" type="button" (click)="getGitBranches(selectedApp.appName)">
+                  <mat-icon>refresh</mat-icon>
+                  Обновить
+                </button>
+              }
+
+            </div>
+
+            @if (selectedApp?.gitPath?.trim() !== '') {
+              <ng-container *ngIf="selectedBranches as br">
+                <mat-form-field class="git-branch-field" appearance="outline">
+                  <mat-label>Ветка</mat-label>
+
+                  <mat-select
+                    [value]="selectedBranchName ?? br.Current"
+                    (selectionChange)="onBranchSelected($event.value)"
+                    panelClass="git-branch-panel"
+                  >
+                    <!-- current -->
+                    <mat-option class="git-sep" disabled>
+                      <span class="git-sep-text">current</span>
+                    </mat-option>
+                    <mat-option [value]="br.Current">{{ br.Current }}</mat-option>
+
+                    <!-- local -->
+                    <mat-option class="git-sep" disabled>
+                      <span class="git-sep-text">local</span>
+                    </mat-option>
+                    <mat-option *ngFor="let b of localBranchesForSelected" [value]="b">
+                      {{ b }}
+                    </mat-option>
+
+                    <!-- remote -->
+                    <mat-option class="git-sep" disabled>
+                      <span class="git-sep-text">remote</span>
+                    </mat-option>
+                    <mat-option *ngFor="let b of remoteBranchesForSelected" [value]="b">
+                      {{ b }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-container>
+
+              <ng-template #noBranches>
+                <div class="empty small">ветки не загружены</div>
+              </ng-template>
+            } @else {
+              <div class="empty small">пока пусто</div>
+            }
+
+          </div>
+        }
+
+
+      </div>
+    </ng-container>
+  </div>
+</div>
