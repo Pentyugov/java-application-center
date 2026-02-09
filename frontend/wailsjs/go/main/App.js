@@ -30,10 +30,6 @@ export function PickCentralInfoFolder() {
   return window['go']['main']['App']['PickCentralInfoFolder']();
 }
 
-export function PickGitFolder(arg1) {
-  return window['go']['main']['App']['PickGitFolder'](arg1);
-}
-
 export function PickJarFile() {
   return window['go']['main']['App']['PickJarFile']();
 }

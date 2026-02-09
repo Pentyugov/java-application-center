@@ -108,14 +108,6 @@ func (a *App) PickBaseApplicationFolder() (res *dto.PickBaseApplicationFolderDTO
 	return
 }
 
-func (a *App) PickGitFolder(appName string) (res string) {
-	res, err := a.deps.Services.CentralService.PickGitDir(appName)
-	if err != nil {
-		a.logError(err)
-	}
-	return
-}
-
 func (a *App) PickCentralInfoFolder() (res string) {
 	res, err := util.PickCentralInfoFolder(a.ctx)
 	if err != nil {

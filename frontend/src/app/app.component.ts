@@ -37,7 +37,6 @@ import {AppSettings} from './model/settings';
 import {EditSettingsDialogComponent} from './ui/edit-settings-dialog';
 import {LogDialogComponent} from './ui/log/log-dialog.component';
 import {NotificationService} from './services/notification.service';
-import {PickGitFolder} from '../../wailsjs/go/main/App';
 import {GitService} from './services/git.service';
 import {domain} from '../../wailsjs/go/models';
 import {MatSelectModule} from '@angular/material/select';
@@ -107,7 +106,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 .subscribe({
                     next: (response: RunningProcesses[]) => {
                         this.centralInfo.applicationInfos.forEach(ai => {
-                            const find = response.find(rp => rp.path === ai.path);
+                            const find = response.find(rp => rp.path === ai.jarPath);
                             ai.pid = find ? find.pid : 0;
                         });
                     },
@@ -163,7 +162,6 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 })
         );
-
     }
 
     private reloadInternal(): void {
@@ -283,7 +281,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
                 this.centralService.runApp(appName).subscribe({
                     next: (response: CommandResult) => {
-                        const find = this.centralInfo.applicationInfos.find(ai => ai.path === response.path);
+                        const find = this.centralInfo.applicationInfos.find(ai => ai.jarPath === response.path);
                         if (find) {
                             find.pid = response.pid
                         }
@@ -354,7 +352,7 @@ export class AppComponent implements OnInit, OnDestroy {
         const clone: ApplicationInfo = new ApplicationInfo();
 
         clone.appName = app.appName + '_copy';
-        clone.path = app.path;
+        clone.jarPath = app.jarPath;
 
         clone.appArguments = app.appArguments
                 ? [...app.appArguments]
@@ -421,7 +419,7 @@ export class AppComponent implements OnInit, OnDestroy {
                     panelClass: 'solid-dialog',
                     data: {
                         appName: applicationInfo.appName,
-                        path: applicationInfo.path
+                        path: applicationInfo.jarPath
                     }
                 }
         );
@@ -438,7 +436,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            applicationInfo.path = path;
+            applicationInfo.jarPath = path;
             applicationInfo.appName = appName;
 
             this.save();
@@ -614,7 +612,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     getGitBranches(appName: string): void {
         const find = this.selectedApp
-        if (find && find.gitPath.trim() !== '') {
+        if (find && find.hasGit) {
             this.subscriptions.push(
                     this.gitService.getGitBranches(appName).subscribe({
                         next: (response: domain.Branches) => {
@@ -633,8 +631,6 @@ export class AppComponent implements OnInit, OnDestroy {
                     })
             )
         }
-
-
     }
 
     private save(): void {
@@ -655,22 +651,6 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 })
         );
-    }
-
-    async pickGitRepo() {
-        try {
-            const path = await PickGitFolder(this.selectedAppName ?? "");
-            if (!path) {
-                return;
-            }
-
-            if (this.selectedApp) {
-                this.selectedApp.gitPath = path;
-                this.save()
-            }
-        } catch (err: any) {
-            this.notificationService.notifyError(err, "Ошибка")
-        }
     }
 
     private saveSettings(): void {

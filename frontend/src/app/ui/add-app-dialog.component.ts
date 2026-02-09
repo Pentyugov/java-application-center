@@ -45,7 +45,7 @@ export interface AddAppDialogResult {
             <div style="display: flex; gap: 8px; padding-top: 20px">
                 <mat-form-field appearance="outline" style="flex: 1">
                     <mat-label>Выберите домашнюю директорию приложения</mat-label>
-                    <input matInput [(ngModel)]="applicationInfo.path" disabled/>
+                    <input matInput [(ngModel)]="applicationInfo.jarPath" disabled/>
                 </mat-form-field>
 
                 <button
@@ -71,7 +71,7 @@ export interface AddAppDialogResult {
                 <div style="margin-bottom: 6px; font-size: 12px; opacity: 0.8;">Выберите JAR</div>
 
                 <mat-radio-group
-                        [(ngModel)]="applicationInfo.path"
+                        [(ngModel)]="applicationInfo.jarPath"
                         (ngModelChange)="onJarPathChange($event)"
                         style="display: flex; flex-direction: column; gap: 6px;"
                 >
@@ -86,7 +86,7 @@ export interface AddAppDialogResult {
 
         <div mat-dialog-actions align="end">
             <button mat-stroked-button (click)="close()">Отмена</button>
-            <button mat-raised-button color="primary" (click)="add()" [disabled]="!applicationInfo.path">
+            <button mat-raised-button color="primary" (click)="add()" [disabled]="!applicationInfo.jarPath">
                 Добавить
             </button>
         </div>
@@ -128,7 +128,7 @@ export class AddAppDialogComponent {
 
     onJarPathChange(selectedPath: string): void {
 
-        this.applicationInfo.path = selectedPath;
+        this.applicationInfo.jarPath = selectedPath;
 
         this.applicationInfo.appName = this.extractName(selectedPath);
     }

@@ -18,8 +18,6 @@ export function PickBaseApplicationFolder():Promise<dto.PickBaseApplicationFolde
 
 export function PickCentralInfoFolder():Promise<string>;
 
-export function PickGitFolder(arg1:string):Promise<string>;
-
 export function PickJarFile():Promise<string>;
 
 export function RunAll():Promise<void>;

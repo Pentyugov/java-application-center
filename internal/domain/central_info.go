@@ -15,8 +15,9 @@ type ApplicationInfo struct {
 	EnvVariables []EnvVariable `json:"envVariables"`
 	AppArguments []string      `json:"appArguments"`
 	BaseDir      string        `json:"baseDir"`
-	Path         string        `json:"path"`
-	GitPath      string        `json:"gitPath"`
+	JarPath      string        `json:"jarPath"`
 	StartOrder   uint8         `json:"startOrder"`
 	IsActive     bool          `json:"isActive"`
+	HasGit       bool          `json:"hasGit"`
+	HasMaven     bool          `json:"hasMaven"`
 }

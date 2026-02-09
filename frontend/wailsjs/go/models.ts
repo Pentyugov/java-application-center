@@ -37,10 +37,11 @@ export namespace domain {
 	    envVariables: EnvVariable[];
 	    appArguments: string[];
 	    baseDir: string;
-	    path: string;
-	    gitPath: string;
+	    jarPath: string;
 	    startOrder: number;
 	    isActive: boolean;
+	    hasGit: boolean;
+	    hasMaven: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ApplicationInfo(source);
@@ -52,10 +53,11 @@ export namespace domain {
 	        this.envVariables = this.convertValues(source["envVariables"], EnvVariable);
 	        this.appArguments = source["appArguments"];
 	        this.baseDir = source["baseDir"];
-	        this.path = source["path"];
-	        this.gitPath = source["gitPath"];
+	        this.jarPath = source["jarPath"];
 	        this.startOrder = source["startOrder"];
 	        this.isActive = source["isActive"];
+	        this.hasGit = source["hasGit"];
+	        this.hasMaven = source["hasMaven"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -148,11 +150,12 @@ export namespace dto {
 	    envVariables: EnvVariableDTO[];
 	    appArguments: string[];
 	    baseDir: string;
-	    path: string;
-	    gitPath: string;
+	    jarPath: string;
 	    startOrder: number;
 	    isActive: boolean;
 	    pid: number;
+	    hasGit: boolean;
+	    hasMaven: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ApplicationInfoDTO(source);
@@ -164,11 +167,12 @@ export namespace dto {
 	        this.envVariables = this.convertValues(source["envVariables"], EnvVariableDTO);
 	        this.appArguments = source["appArguments"];
 	        this.baseDir = source["baseDir"];
-	        this.path = source["path"];
-	        this.gitPath = source["gitPath"];
+	        this.jarPath = source["jarPath"];
 	        this.startOrder = source["startOrder"];
 	        this.isActive = source["isActive"];
 	        this.pid = source["pid"];
+	        this.hasGit = source["hasGit"];
+	        this.hasMaven = source["hasMaven"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
