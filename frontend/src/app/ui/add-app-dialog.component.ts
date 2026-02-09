@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
@@ -10,13 +10,14 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {ApplicationInfo} from '../model/application-info';
 
-import {PickBaseApplicationFolder} from '../../../wailsjs/go/main/App';
+import {PickBaseApplicationFolder, ScanJars} from '../../../wailsjs/go/main/App';
 import {dto} from '../../../wailsjs/go/models';
 import PickBaseApplicationFolderDTO = dto.PickBaseApplicationFolderDTO;
 import {MatRadioModule} from '@angular/material/radio';
 
 export interface AddAppDialogData {
     title: string;
+    applicationInfo: ApplicationInfo | undefined;
 }
 
 export interface AddAppDialogResult {
@@ -45,14 +46,14 @@ export interface AddAppDialogResult {
             <div style="display: flex; gap: 8px; padding-top: 20px">
                 <mat-form-field appearance="outline" style="flex: 1">
                     <mat-label>Выберите домашнюю директорию приложения</mat-label>
-                    <input matInput [(ngModel)]="applicationInfo.jarPath" disabled/>
+                    <input matInput [(ngModel)]="applicationInfo.baseDir" disabled/>
                 </mat-form-field>
 
                 <button
                         mat-stroked-button
                         type="button"
                         class="explorer-btn"
-                        (click)="pickJar()"
+                        (click)="pickBaseDir()"
                         title="Выбрать JAR файл"
                         style="height: 56px"
                 >
@@ -92,23 +93,52 @@ export interface AddAppDialogResult {
         </div>
     `
 })
-export class AddAppDialogComponent {
+export class AddAppDialogComponent implements OnInit {
 
     applicationInfo: ApplicationInfo = new ApplicationInfo();
-
     jarPaths: string[] = [];
+    isEdit: boolean = false;
 
     constructor(
-            private readonly dialogRef: MatDialogRef<AddAppDialogComponent, AddAppDialogResult>,
-            @Inject(MAT_DIALOG_DATA) public readonly data: AddAppDialogData
+            @Inject(MAT_DIALOG_DATA) public readonly data: AddAppDialogData,
+            private readonly dialogRef: MatDialogRef<AddAppDialogComponent, AddAppDialogResult>
     ) {
+        if (data.applicationInfo) {
+            this.applicationInfo = {
+                ...data.applicationInfo,
+                appArguments: [...(data.applicationInfo.appArguments ?? [])],
+                envVariables: (data.applicationInfo.envVariables ?? []).map(ev => ({ ...ev })),
+            } as ApplicationInfo;
+
+            this.isEdit = true;
+        }
+    }
+
+    ngOnInit(): void {
+        if (this.isEdit) {
+            this.scanJars(this.applicationInfo.baseDir).then();
+        }
     }
 
     close(): void {
         this.dialogRef.close();
     }
 
-    async pickJar(): Promise<void> {
+    async scanJars(baseDir: string): Promise<void> {
+        console.log('scanJars');
+        try {
+            const jarPaths: Array<string> = await ScanJars(baseDir);
+            if (!dto) {
+                return;
+            }
+            this.jarPaths = jarPaths;
+        } catch (err) {
+            console.error('PickJarFile failed', err);
+        }
+    }
+
+    async pickBaseDir(): Promise<void> {
+        console.log('pickBaseDir');
         try {
             const dto: PickBaseApplicationFolderDTO = await PickBaseApplicationFolder();
             if (!dto) {

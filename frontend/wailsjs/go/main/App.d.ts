@@ -28,6 +28,8 @@ export function Save(arg1:domain.CentralInfo):Promise<dto.CentralInfoDTO>;
 
 export function SaveSettings(arg1:domain.AppSettings):Promise<void>;
 
+export function ScanJars(arg1:string):Promise<Array<string>>;
+
 export function StartLogStreaming(arg1:string):Promise<void>;
 
 export function StopAllApplications():Promise<void>;

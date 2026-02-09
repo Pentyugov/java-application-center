@@ -50,6 +50,10 @@ export function SaveSettings(arg1) {
   return window['go']['main']['App']['SaveSettings'](arg1);
 }
 
+export function ScanJars(arg1) {
+  return window['go']['main']['App']['ScanJars'](arg1);
+}
+
 export function StartLogStreaming(arg1) {
   return window['go']['main']['App']['StartLogStreaming'](arg1);
 }

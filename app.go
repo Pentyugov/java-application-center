@@ -7,6 +7,7 @@ import (
 	"central-desktop/internal/service"
 	"central-desktop/internal/util"
 	"context"
+	"errors"
 	"log/slog"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -149,6 +150,18 @@ func (a *App) GetGitBranches(appName string, fetch bool) (res *domain.Branches) 
 		a.logError(err)
 	}
 	a.Logger.Info("Git branches: ", "app", appName, "branches", res)
+	return
+}
+
+func (a *App) ScanJars(baseDir string) (res []string) {
+	res, err := util.ScanJars(baseDir)
+	if err != nil {
+		a.logError(err)
+	}
+	if len(res) < 1 {
+		err = errors.New("в выбранной директории не найдено ни одного .jar файла")
+		a.logError(err)
+	}
 	return
 }
 

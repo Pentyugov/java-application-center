@@ -25,7 +25,6 @@ import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-dr
 import {AddEnvDialogComponent, AddEnvDialogResult} from './ui/add-env-dialog.component';
 import {AddAppDialogComponent, AddAppDialogResult} from './ui/add-app-dialog.component';
 import {AddArgDialogComponent, AddArgDialogResult} from './ui/add-arg-dialog.component';
-import {EditAppDialogComponent, EditAppDialogResult} from './ui/edit-app-dialog.component';
 import {EditArgDialogComponent, EditArgDialogResult} from './ui/edit-arg-dialog.component';
 import {EditEnvDialogComponent, EditEnvDialogResult} from './ui/edit-env-dialog.component';
 import {CommandResult} from './model/command-result';
@@ -393,7 +392,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 {
                     width: '720px',
                     panelClass: 'solid-dialog',
-                    data: {title: `Добавить приложение`}
+                    data: {
+                        title: `Добавить приложение`
+                    }
                 }
         );
 
@@ -416,35 +417,56 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     openEditAppInfoDialog(applicationInfo: ApplicationInfo): void {
-        const ref = this.dialog.open<EditAppDialogComponent, any, EditAppDialogResult>(
-                EditAppDialogComponent,
+        const oldName = applicationInfo.appName;
+
+        const ref = this.dialog.open<AddAppDialogComponent, any, AddAppDialogResult>(
+                AddAppDialogComponent,
                 {
                     width: '720px',
                     panelClass: 'solid-dialog',
                     data: {
-                        appName: applicationInfo.appName,
-                        path: applicationInfo.jarPath
+                        title: `Редактировать приложение`,
+                        applicationInfo: applicationInfo
                     }
                 }
         );
 
         ref.afterClosed().subscribe((res) => {
-            const appName = res?.appName;
-            if (!appName) return;
+            const edited = res?.applicationInfo;
+            if (!edited || !edited.appName || !edited.baseDir || !edited.jarPath) return;
 
-            const path = res?.path;
-            if (!path) return;
-
-            if (this.checkNameExists(appName)) {
-                this.notificationService.notifyError('Данное наименование уже используется', 'Ошибка')
+            // проверка уникальности имени: исключаем сам текущий объект
+            if (this.checkNameExistsExcept(edited.appName, applicationInfo)) {
+                this.notificationService.notifyError('Данное наименование уже используется', 'Ошибка');
                 return;
             }
 
-            applicationInfo.jarPath = path;
-            applicationInfo.appName = appName;
+            // применяем изменения
+            applicationInfo.baseDir = edited.baseDir;
+            applicationInfo.jarPath = edited.jarPath;
+            applicationInfo.appName = edited.appName;
+
+            // если переименовали выбранное — обновляем selectedAppName
+            if (this.selectedAppName === oldName) {
+                this.selectedAppName = edited.appName;
+            }
+
+            // перенос ключа в branchesMap (если было)
+            if (oldName !== edited.appName) {
+                const b = this.branchesMap.get(oldName);
+                if (b) {
+                    this.branchesMap.delete(oldName);
+                    this.branchesMap.set(edited.appName, b);
+                }
+            }
 
             this.save();
         });
+    }
+
+
+    private checkNameExistsExcept(name: string, current: ApplicationInfo): boolean {
+        return this.centralInfo.applicationInfos.some(a => a !== current && a.appName === name);
     }
 
     checkNameExists(name: string): boolean {
