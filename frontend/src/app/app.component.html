@@ -2,7 +2,6 @@
 <div class="page">
     <div class="panel">
         <ng-container>
-
             <div class="apps-layout">
                 <!-- LEFT: list -->
                 <div class="apps-left card">
@@ -51,7 +50,9 @@
                             </button>
                         </div>
                     </div>
+
                     <hr class="soft">
+
                     <!-- ВАЖНО: скролл только у списка -->
                     <div
                             class="apps-list apps-list-scroll pretty-scroll"
@@ -100,8 +101,7 @@
                                     <div class="app-title-text">{{ app.appName }}</div>
                                     <div class="muted break app-path">Родительская папка: {{ app.baseDir }}</div>
                                     <div class="muted break app-path">Путь: {{ app.jarPath }}</div>
-                                    <div class="muted break app-path">Порядковый номер запуска: {{ app.startOrder }}
-                                    </div>
+                                    <div class="muted break app-path">Порядковый номер запуска: {{ app.startOrder }}</div>
                                     <div *ngIf="app.pid > 0" class="muted break app-path">PID: {{ app.pid }}</div>
                                 </div>
 
@@ -183,36 +183,53 @@
                                 <div class="empty small" *ngIf="(app.appArguments?.length ?? 0) === 0">пока пусто</div>
 
                                 <div
-                                        class="table-wrap pretty-scroll"
+                                        class="table-wrap"
                                         *ngIf="(app.appArguments?.length ?? 0) > 0"
                                         [class.scroll-8]="(app.appArguments?.length ?? 0) > 8"
                                 >
-                                    <table class="table table-sm">
-                                        <thead>
-                                        <tr>
-                                            <th>Наименование</th>
-                                            <th class="col-action">Действие</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr *ngFor="let arg of app.appArguments; let i = index">
-                                            <td class="break mono">{{ arg }}</td>
-                                            <td>
-                                                <div class="row-actions">
-                                                    <button mat-stroked-button class="btn icon-btn" type="button"
-                                                            (click)="deleteJvmArg(app, i)">
-                                                        <mat-icon>delete</mat-icon>
-                                                    </button>
+                                    <!-- header -->
+                                    <div class="table-head">
+                                        <table class="table table-sm">
+                                            <colgroup>
+                                                <col class="col-jvm-name">
+                                                <col class="col-jvm-action">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>Наименование</th>
+                                                <th class="th-right">Действие</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
 
-                                                    <button mat-stroked-button class="btn icon-btn" type="button"
-                                                            (click)="openAddArgDialog(app, i)">
-                                                        <mat-icon>edit</mat-icon>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    <!-- body -->
+                                    <div class="table-body pretty-scroll">
+                                        <table class="table table-sm">
+                                            <colgroup>
+                                                <col class="col-jvm-name">
+                                                <col class="col-jvm-action">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr *ngFor="let arg of app.appArguments; let i = index">
+                                                <td class="break mono">{{ arg }}</td>
+                                                <td class="td-right">
+                                                    <div class="row-actions">
+                                                        <button mat-stroked-button class="btn icon-btn" type="button"
+                                                                (click)="deleteJvmArg(app, i)">
+                                                            <mat-icon>delete</mat-icon>
+                                                        </button>
+
+                                                        <button mat-stroked-button class="btn icon-btn" type="button"
+                                                                (click)="openAddArgDialog(app, i)">
+                                                            <mat-icon>edit</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
@@ -233,38 +250,70 @@
                                 <div class="empty small" *ngIf="(app.envVariables?.length ?? 0) === 0">пока пусто</div>
 
                                 <div
-                                        class="table-wrap pretty-scroll"
+                                        class="table-wrap"
                                         *ngIf="(app.envVariables?.length ?? 0) > 0"
                                         [class.scroll-8]="(app.envVariables?.length ?? 0) > 8"
                                 >
-                                    <table class="table table-sm">
-                                        <thead>
-                                        <tr>
-                                            <th class="col-name">Наименование</th>
-                                            <th class="col-value">Значение</th>
-                                            <th class="col-action">Действие</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr *ngFor="let env of app.envVariables; let i = index">
-                                            <td class="break mono">{{ env.name }}</td>
-                                            <td class="break mono">{{ env.value }}</td>
-                                            <td>
-                                                <div class="row-actions">
-                                                    <button mat-stroked-button class="btn icon-btn" type="button"
-                                                            (click)="deleteEnvVar(app, i)">
-                                                        <mat-icon>delete</mat-icon>
-                                                    </button>
+                                    <!-- header -->
+                                    <div class="table-head">
+                                        <table class="table table-sm">
+                                            <colgroup>
+                                                <col class="col-env-active">
+                                                <col class="col-env-name">
+                                                <col class="col-env-value">
+                                                <col class="col-env-action">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th class="th-center">Активна</th>
+                                                <th>Наименование</th>
+                                                <th>Значение</th>
+                                                <th class="th-right">Действие</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
 
-                                                    <button mat-stroked-button class="btn icon-btn" type="button"
-                                                            (click)="openAddEnvDialog(app, env)">
-                                                        <mat-icon>edit</mat-icon>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    <!-- body -->
+                                    <div class="table-body pretty-scroll">
+                                        <table class="table table-sm">
+                                            <colgroup>
+                                                <col class="col-env-active">
+                                                <col class="col-env-name">
+                                                <col class="col-env-value">
+                                                <col class="col-env-action">
+                                            </colgroup>
+                                            <tbody>
+                                            <tr *ngFor="let env of app.envVariables; let i = index">
+                                                <td class="td-center">
+                                                    <mat-checkbox
+                                                            class="app-checkbox"
+                                                            [checked]="env.isActive"
+                                                            (change)="toggleEnvActive(app, env, $event.checked)"
+                                                            aria-label="Активность переменной окружения"
+                                                    ></mat-checkbox>
+                                                </td>
+
+                                                <td class="break mono">{{ env.name }}</td>
+                                                <td class="break mono">{{ env.value }}</td>
+
+                                                <td class="td-right">
+                                                    <div class="row-actions">
+                                                        <button mat-stroked-button class="btn icon-btn" type="button"
+                                                                (click)="deleteEnvVar(app, i)">
+                                                            <mat-icon>delete</mat-icon>
+                                                        </button>
+
+                                                        <button mat-stroked-button class="btn icon-btn" type="button"
+                                                                (click)="openAddEnvDialog(app, env)">
+                                                            <mat-icon>edit</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
@@ -301,13 +350,11 @@
                                             (selectionChange)="onBranchSelected($event.value)"
                                             panelClass="git-branch-panel"
                                     >
-                                        <!-- current -->
                                         <mat-option class="git-sep" disabled>
                                             <span class="git-sep-text">current</span>
                                         </mat-option>
                                         <mat-option [value]="br.Current">{{ br.Current }}</mat-option>
 
-                                        <!-- local -->
                                         <mat-option class="git-sep" disabled>
                                             <span class="git-sep-text">local</span>
                                         </mat-option>
@@ -315,7 +362,6 @@
                                             {{ b }}
                                         </mat-option>
 
-                                        <!-- remote -->
                                         <mat-option class="git-sep" disabled>
                                             <span class="git-sep-text">remote</span>
                                         </mat-option>
@@ -335,7 +381,6 @@
                         } @else {
                             <div class="empty small">пока пусто</div>
                         }
-
                     </div>
                 }
             </div>

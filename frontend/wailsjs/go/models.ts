@@ -21,6 +21,7 @@ export namespace domain {
 	export class EnvVariable {
 	    name: string;
 	    value: string;
+	    isActive: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new EnvVariable(source);
@@ -30,6 +31,7 @@ export namespace domain {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.name = source["name"];
 	        this.value = source["value"];
+	        this.isActive = source["isActive"];
 	    }
 	}
 	export class ApplicationInfo {
@@ -134,6 +136,7 @@ export namespace dto {
 	export class EnvVariableDTO {
 	    name: string;
 	    value: string;
+	    isActive: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new EnvVariableDTO(source);
@@ -143,6 +146,7 @@ export namespace dto {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.name = source["name"];
 	        this.value = source["value"];
+	        this.isActive = source["isActive"];
 	    }
 	}
 	export class ApplicationInfoDTO {

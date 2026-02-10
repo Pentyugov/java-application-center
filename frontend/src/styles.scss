@@ -28,7 +28,7 @@
 
 html, body {
     height: 100%;
-    overflow: hidden; /* важно: убираем правый скролл у всей страницы */
+    overflow: hidden;
 }
 
 body {
@@ -188,55 +188,46 @@ body {
 }
 
 /* =======================
-   Global Material FormField / Input / Select (MDC)
+   Global Material FormField
    ======================= */
-
-/* All mat-form-field should stretch nicely */
 .mat-mdc-form-field {
     width: 100%;
 }
 
-/* Outline field surface */
 .mat-mdc-form-field .mdc-text-field--outlined {
     background: rgba(7, 12, 22, 0.55);
     border-radius: 12px;
 }
 
-/* Outline border */
 .mat-mdc-form-field .mdc-notched-outline__leading,
 .mat-mdc-form-field .mdc-notched-outline__notch,
 .mat-mdc-form-field .mdc-notched-outline__trailing {
     border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
-/* Hover border */
 .mat-mdc-form-field:hover .mdc-notched-outline__leading,
 .mat-mdc-form-field:hover .mdc-notched-outline__notch,
 .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
     border-color: rgba(59, 130, 246, 0.30) !important;
 }
 
-/* Focus border (MDC often adds focused class) */
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
     border-color: rgba(59, 130, 246, 0.45) !important;
 }
 
-/* Labels */
 .mat-mdc-form-field .mdc-floating-label,
 .mat-mdc-form-field .mat-mdc-floating-label {
     color: rgba(255, 255, 255, 0.62) !important;
 }
 
-/* Inputs */
 .mat-mdc-form-field input.mat-mdc-input-element,
 .mat-mdc-form-field textarea.mat-mdc-input-element {
     color: rgba(255, 255, 255, 0.92) !important;
     font-size: 15px;
 }
 
-/* Select value + placeholder */
 .mat-mdc-form-field .mat-mdc-select-value {
     color: rgba(255, 255, 255, 0.90) !important;
 }
@@ -244,7 +235,6 @@ body {
     color: rgba(255, 255, 255, 0.55) !important;
 }
 
-/* Select arrow */
 .mat-mdc-form-field .mat-mdc-select-arrow {
     color: var(--accent) !important;
 }
@@ -252,7 +242,6 @@ body {
 /* =======================
    Global Select Panel (Overlay)
    ======================= */
-
 .cdk-overlay-pane .mat-mdc-select-panel {
     background: rgba(43, 43, 66, 0.98) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
@@ -297,7 +286,6 @@ body {
     color: rgba(255, 255, 255, 0.95) !important;
 }
 
-/* Scrollbar for overlay panels */
 .cdk-overlay-pane .mat-mdc-select-panel::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -322,7 +310,6 @@ body {
     background: rgba(7, 12, 22, 0.55);
 }
 
-/* Optional: separator options (like your git-sep) if used anywhere */
 .cdk-overlay-pane .mat-mdc-select-panel .mat-mdc-option.git-sep {
     opacity: 1 !important;
     cursor: default !important;
@@ -423,6 +410,66 @@ body {
     --mdc-radio-unselected-pressed-icon-color: var(--controlBorderHover) !important;
 
     --mat-mdc-radio-checked-ripple-color: var(--accentSoft) !important;
+}
+
+/* =======================
+   Global Material Checkbox (MDC)
+   ======================= */
+.mat-mdc-checkbox,
+.mat-mdc-checkbox.mat-accent,
+.mat-mdc-checkbox.mat-primary,
+.mat-mdc-checkbox.mat-warn{
+    --mdc-checkbox-unselected-icon-color: rgba(255, 255, 255, 0.55);
+    --mdc-checkbox-unselected-hover-icon-color: rgba(59, 130, 246, 0.60);
+    --mdc-checkbox-unselected-focus-icon-color: rgba(59, 130, 246, 0.70);
+
+    --mdc-checkbox-selected-icon-color: var(--controlBorderHover) !important;
+    --mdc-checkbox-selected-hover-icon-color: var(--controlBorderHover) !important;
+    --mdc-checkbox-selected-focus-icon-color: var(--controlBorderHover) !important;
+
+    --mdc-checkbox-selected-checkmark-color: rgba(255, 255, 255, 0.95);
+
+    --mdc-checkbox-selected-container-color: var(--controlBorderHover) !important;
+    --mdc-checkbox-selected-hover-container-color: var(--controlBorderHover) !important;
+    --mdc-checkbox-selected-focus-container-color: var(--controlBorderHover) !important;
+
+    --mdc-checkbox-unselected-container-color: transparent;
+    --mdc-checkbox-unselected-hover-container-color: rgba(59, 130, 246, 0.08);
+    --mdc-checkbox-unselected-focus-container-color: rgba(59, 130, 246, 0.10);
+
+    --mdc-checkbox-disabled-selected-icon-color: rgba(59, 130, 246, 0.25);
+    --mdc-checkbox-disabled-unselected-icon-color: rgba(255, 255, 255, 0.18);
+
+    --mat-mdc-checkbox-ripple-color: rgba(255, 255, 255, 0.18);
+    --mat-mdc-checkbox-checked-ripple-color: var(--accentSoft);
+
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.mat-mdc-checkbox .mdc-form-field > label {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.mat-mdc-checkbox.app-checkbox {
+    --mdc-checkbox-state-layer-size: 32px;   /* уменьшаем ripple зону */
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* убираем лишний отступ label-обертки */
+.mat-mdc-checkbox.app-checkbox .mdc-form-field {
+    margin: 0 !important;
+}
+
+/* сам box по центру */
+.mat-mdc-checkbox.app-checkbox .mdc-checkbox {
+    margin: 0 !important;
 }
 
 /* =======================

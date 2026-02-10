@@ -6,8 +6,9 @@ type CentralInfoDTO struct {
 }
 
 type EnvVariableDTO struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
+	Name     string `json:"name"`
+	Value    string `json:"value"`
+	IsActive bool   `json:"isActive"`
 }
 
 type ApplicationInfoDTO struct {

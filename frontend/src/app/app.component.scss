@@ -1,6 +1,3 @@
-/* app.component.scss */
-
-/* ===== Page shell ===== */
 .page {
     width: 100%;
     height: 100vh;
@@ -29,7 +26,6 @@
     min-height: 0;
 }
 
-/* ===== Card base ===== */
 .card {
     background: var(--card);
     border: 1px solid var(--cardBorder);
@@ -37,7 +33,6 @@
     box-shadow: var(--shadow);
 }
 
-/* ===== LEFT column (scroll only list) ===== */
 .apps-left {
     height: 100%;
     padding: 12px;
@@ -108,7 +103,6 @@
     padding-right: 2px;
 }
 
-/* Item */
 .apps-item {
     width: 100%;
     text-align: left;
@@ -234,7 +228,6 @@
             inset 0 0 0 2px rgba(239, 68, 68, 0.35);
 }
 
-/* ===== CENTER column ===== */
 .apps-right {
     height: 100%;
     min-width: 0;
@@ -330,25 +323,28 @@ hr.soft {
     line-height: 1.25;
 }
 
-/* Tables */
+/* =========================================================
+   TABLES: fixed header + scroll body (correct column alignment)
+   ========================================================= */
 .table-wrap {
-    overflow: auto;
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.10);
     background: rgba(255, 255, 255, 0.02);
-
-    /* Ключевой фикс: чтобы появление/исчезновение скролла не меняло геометрию */
-    scrollbar-gutter: stable both-edges;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-/*
-  >8 строк: появляется внутренний скролл, но высота НЕ прыгает,
-  а общая карточка не начинает скроллиться из-за +5..10px.
-*/
-.table-wrap.scroll-8 {
-    max-height: 398px; /* было 400px, срезаем пару px чтобы не толкало карточку */
+.table-head {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.table-body {
     overflow: auto;
+}
+
+.table-wrap.scroll-8 .table-body {
+    max-height: 396px;
+    scrollbar-gutter: stable;
 }
 
 .table {
@@ -369,7 +365,6 @@ hr.soft {
     font-weight: 850;
     font-size: 13px;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
     background: rgba(255, 255, 255, 0.03);
     white-space: nowrap;
 }
@@ -379,12 +374,17 @@ hr.soft {
     line-height: 1.2;
     font-size: 13px;
 
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
     vertical-align: middle;
     color: rgba(255, 255, 255, 0.88);
 
     overflow: hidden;
     text-overflow: ellipsis;
+
+    border-top: none;
+}
+
+.table tbody tr + tr td {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .table tbody tr:hover td {
@@ -401,18 +401,16 @@ hr.soft {
     font-size: 12.8px;
 }
 
-.col-action {
-    width: 138px;
+/* alignment helpers */
+.th-center,
+.td-center {
+    text-align: center;
+}
+
+.th-right,
+.td-right {
     text-align: right;
     padding-right: 12px !important;
-}
-
-.col-name {
-    width: 340px;
-}
-
-.col-value {
-    width: 520px;
 }
 
 .table thead th:last-child {
@@ -423,6 +421,22 @@ hr.soft {
 .table tbody td:last-child {
     text-align: right;
     padding-right: 12px;
+}
+
+/* ===== column widths via colgroup (ENV) ===== */
+.col-env-active { width: 92px; }
+.col-env-name   { width: 340px; }
+.col-env-value  { width: 520px; }
+.col-env-action { width: 138px; }
+
+/* ===== column widths via colgroup (JVM) ===== */
+.col-jvm-name   { width: auto; }
+.col-jvm-action { width: 138px; }
+
+/* checkbox cell */
+.app-checkbox {
+    transform: scale(0.95);
+    transform-origin: center;
 }
 
 .row-actions {
@@ -561,6 +575,6 @@ hr.soft {
 mat-icon.spin {
     animation: icon-spin 0.9s linear infinite;
     transform-origin: 50% 50%;
-    display: inline-block; // важно, чтобы transform работал стабильно
+    display: inline-block;
     will-change: transform;
 }

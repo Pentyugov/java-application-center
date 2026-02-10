@@ -41,8 +41,6 @@ export interface AddAppDialogResult {
         <h2 mat-dialog-title>{{ data.title }}</h2>
 
         <div mat-dialog-content>
-
-            <!-- Путь + кнопка выбора -->
             <div style="display: flex; gap: 8px; padding-top: 20px">
                 <mat-form-field appearance="outline" style="flex: 1">
                     <mat-label>Выберите домашнюю директорию приложения</mat-label>
@@ -61,13 +59,11 @@ export interface AddAppDialogResult {
                 </button>
             </div>
 
-
             <mat-form-field appearance="outline" style="width: 100%;">
                 <mat-label>Наименование</mat-label>
                 <input matInput [(ngModel)]="applicationInfo.appName"/>
             </mat-form-field>
 
-            <!-- Выбор JAR из списка найденных -->
             <div *ngIf="jarPaths?.length" style="padding-top: 8px; padding-bottom: 8px;">
                 <div style="margin-bottom: 6px; font-size: 12px; opacity: 0.8;">Выберите JAR</div>
 

@@ -43,6 +43,7 @@ import { AddArgDialogComponent, AddArgDialogResult } from './ui/add-arg-dialog.c
 import { EditSettingsDialogComponent } from './ui/edit-settings-dialog';
 import { LogDialogComponent } from './ui/log/log-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogResult } from './ui/confirm-dialog';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-root',
@@ -63,6 +64,7 @@ import { ConfirmDialogComponent, ConfirmDialogResult } from './ui/confirm-dialog
         MatFormFieldModule,
         MatSelectModule,
         ReactiveFormsModule,
+        MatCheckboxModule,
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
@@ -107,8 +109,6 @@ export class AppComponent implements OnInit {
                     next: (processes: RunningProcesses[]) => this.applyRunningPids(processes),
                     error: (err) => console.error(err),
                 });
-
-        // корректно снять обработчик событий wails при уничтожении компонента
         this.destroyRef.onDestroy(() => {
             try {
                 this.notificationEventUnsub?.();
@@ -121,7 +121,6 @@ export class AppComponent implements OnInit {
     // -----------------------------
     // Derived getters for template
     // -----------------------------
-
     get selectedApp(): ApplicationInfo | null {
         if (!this.selectedAppName) return null;
         return this.centralInfo.applicationInfos.find((a) => a.appName === this.selectedAppName) ?? null;
@@ -551,7 +550,6 @@ export class AppComponent implements OnInit {
                 .subscribe({
                     next: (response: CentralInfo) => {
                         this.centralInfo = this.normalizeCentralInfo(response);
-                        // selection не трогаем, но если переименовали/удалили — подстрахуемся
                         this.ensureValidSelectionAfterReload(false);
                     },
                     error: (err) => this.notificationService.notifyError(err, 'on save error'),
@@ -601,11 +599,14 @@ export class AppComponent implements OnInit {
             a.startOrder = a.startOrder ?? 0;
             a.isActive = a.isActive ?? false;
             a.pid = a.pid ?? 0;
+
+            a.envVariables.forEach((ev) => {
+                (ev as any).isActive = (ev as any).isActive ?? true;
+            });
+
         });
 
         info.applicationInfos.sort((a, b) => (a.startOrder ?? 0) - (b.startOrder ?? 0));
-
-        // всегда переиндексируем локально (это делает поведение стабильным)
         this.recalculateStartOrder(false);
 
         return info;
@@ -662,7 +663,9 @@ export class AppComponent implements OnInit {
         clone.hasMaven = app.hasMaven;
 
         clone.appArguments = app.appArguments ? [...app.appArguments] : [];
-        clone.envVariables = app.envVariables ? app.envVariables.map((ev) => ({ name: ev.name, value: ev.value })) : [];
+        clone.envVariables = app.envVariables
+                ? app.envVariables.map((ev) => ({ name: ev.name, value: ev.value, isActive: ev.isActive }))
+                : [];
 
         return clone;
     }
@@ -673,6 +676,11 @@ export class AppComponent implements OnInit {
 
     checkNameExists(name: string): boolean {
         return this.centralInfo.applicationInfos.some((appInfo) => appInfo.appName === name);
+    }
+
+    toggleEnvActive(app: ApplicationInfo, env: EnvVariable, checked: boolean): void {
+        env.isActive = checked;
+        this.save();
     }
 
     trackByAppName = (_: number, item: ApplicationInfo) => item.appName;
