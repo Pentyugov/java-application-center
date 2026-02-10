@@ -197,7 +197,7 @@ func toEnvList(vars []domain.EnvVariable) []string {
 	out := make([]string, 0, len(vars))
 	for _, v := range vars {
 		name := strings.TrimSpace(v.Name)
-		if name == "" {
+		if name == "" || !v.IsActive {
 			continue
 		}
 		out = append(out, name+"="+v.Value)

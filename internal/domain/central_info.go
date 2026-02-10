@@ -6,8 +6,9 @@ type CentralInfo struct {
 }
 
 type EnvVariable struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
+	Name     string `json:"name"`
+	Value    string `json:"value"`
+	IsActive bool   `json:"isActive"`
 }
 
 type ApplicationInfo struct {

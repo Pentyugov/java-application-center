@@ -54,7 +54,8 @@ func ToEnvVariableDTO(ev *domain.EnvVariable) dto.EnvVariableDTO {
 		return dto.EnvVariableDTO{}
 	}
 	return dto.EnvVariableDTO{
-		Name:  ev.Name,
-		Value: ev.Value,
+		Name:     ev.Name,
+		Value:    ev.Value,
+		IsActive: ev.IsActive,
 	}
 }
