@@ -88,7 +88,7 @@ export interface AddAppDialogResult {
         <div mat-dialog-actions align="end">
             <button mat-stroked-button (click)="close()">Отмена</button>
             <button mat-raised-button color="primary" (click)="add()" [disabled]="!applicationInfo.jarPath">
-                Добавить
+                Сохранить
             </button>
         </div>
     `
