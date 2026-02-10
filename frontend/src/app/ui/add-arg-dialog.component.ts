@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 
 export interface AddArgDialogData {
   title: string;
+  arg: string | undefined;
 }
 
 export interface AddArgDialogResult {
@@ -39,7 +40,7 @@ export interface AddArgDialogResult {
 
     <div mat-dialog-actions align="end">
       <button mat-stroked-button (click)="close()">Отмена</button>
-      <button mat-raised-button color="primary" (click)="add()">Добавить</button>
+      <button mat-raised-button color="primary" (click)="add()">Сохранить</button>
     </div>
   `
 })
@@ -47,10 +48,14 @@ export class AddArgDialogComponent {
 
   arg: string = '';
 
-  constructor(
-    private readonly dialogRef: MatDialogRef<AddArgDialogComponent, AddArgDialogResult>,
-    @Inject(MAT_DIALOG_DATA) public readonly data: AddArgDialogData
-  ) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public readonly data: AddArgDialogData,
+              private readonly dialogRef: MatDialogRef<AddArgDialogComponent, AddArgDialogResult>) {
+
+      if (data.arg) {
+          this.arg = data.arg;
+      }
+
+  }
 
   close(): void {
     this.dialogRef.close();

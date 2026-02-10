@@ -51,7 +51,7 @@
                             </button>
                         </div>
                     </div>
-
+                    <hr class="soft">
                     <!-- ВАЖНО: скролл только у списка -->
                     <div
                             class="apps-list apps-list-scroll pretty-scroll"
@@ -157,7 +157,7 @@
                                     </button>
 
                                     <button mat-stroked-button class="btn btn-sm" type="button"
-                                            (click)="openEditAppInfoDialog(app)">
+                                            (click)="openAddAppInfoDialog(app)">
                                         <mat-icon>edit</mat-icon>
                                         Редактировать
                                     </button>
@@ -205,7 +205,7 @@
                                                     </button>
 
                                                     <button mat-stroked-button class="btn icon-btn" type="button"
-                                                            (click)="openEditArgInfoDialog(app, i)">
+                                                            (click)="openAddArgDialog(app, i)">
                                                         <mat-icon>edit</mat-icon>
                                                     </button>
                                                 </div>
@@ -257,7 +257,7 @@
                                                     </button>
 
                                                     <button mat-stroked-button class="btn icon-btn" type="button"
-                                                            (click)="openEditEnvInfoDialog(env)">
+                                                            (click)="openAddEnvDialog(app, env)">
                                                         <mat-icon>edit</mat-icon>
                                                     </button>
                                                 </div>

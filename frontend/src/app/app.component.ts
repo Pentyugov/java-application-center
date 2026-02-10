@@ -40,8 +40,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AddEnvDialogComponent, AddEnvDialogResult } from './ui/add-env-dialog.component';
 import { AddAppDialogComponent, AddAppDialogResult } from './ui/add-app-dialog.component';
 import { AddArgDialogComponent, AddArgDialogResult } from './ui/add-arg-dialog.component';
-import { EditArgDialogComponent, EditArgDialogResult } from './ui/edit-arg-dialog.component';
-import { EditEnvDialogComponent, EditEnvDialogResult } from './ui/edit-env-dialog.component';
 import { EditSettingsDialogComponent } from './ui/edit-settings-dialog';
 import { LogDialogComponent } from './ui/log/log-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogResult } from './ui/confirm-dialog';
@@ -276,11 +274,15 @@ export class AppComponent implements OnInit {
     // Dialogs
     // -----------------------------
 
-    openAddAppInfoDialog(): void {
+    openAddAppInfoDialog(applicationInfo: ApplicationInfo | undefined = undefined): void {
+
         const ref = this.dialog.open<AddAppDialogComponent, any, AddAppDialogResult>(AddAppDialogComponent, {
             width: '720px',
             panelClass: 'solid-dialog',
-            data: { title: 'Добавить приложение' },
+            data: {
+                title: applicationInfo ? 'Редактировать приложение' : 'Добавить приложение',
+                applicationInfo: applicationInfo,
+            },
         });
 
         ref
@@ -290,30 +292,67 @@ export class AppComponent implements OnInit {
                         filter((res) => !!res?.applicationInfo)
                 )
                 .subscribe((res) => {
-                    const appInfo = res!.applicationInfo!;
-                    if (this.checkNameExists(appInfo.appName)) {
-                        this.notificationService.notifyError('Данное наименование уже используется', 'Ошибка');
-                        return;
+                    if (applicationInfo) {
+                        this.onEditApp(res, applicationInfo)
+                    } else {
+                        this.onAddApp(res)
                     }
-
-                    appInfo.appArguments = appInfo.appArguments ?? [];
-                    appInfo.envVariables = appInfo.envVariables ?? [];
-
-                    this.centralInfo.applicationInfos.push(appInfo);
-                    this.recalculateStartOrder(true);
-                    this.selectedAppName = appInfo.appName;
                 });
     }
 
-    openEditAppInfoDialog(applicationInfo: ApplicationInfo): void {
+    onEditApp(res: AddAppDialogResult | undefined, applicationInfo: ApplicationInfo): void {
         const oldName = applicationInfo.appName;
+        const edited = res?.applicationInfo;
+        if (!edited || !edited.appName || !edited.baseDir || !edited.jarPath) return;
 
-        const ref = this.dialog.open<AddAppDialogComponent, any, AddAppDialogResult>(AddAppDialogComponent, {
+        if (this.checkNameExistsExcept(edited.appName, applicationInfo)) {
+            this.notificationService.notifyError('Данное наименование уже используется', 'Ошибка');
+            return;
+        }
+
+        applicationInfo.baseDir = edited.baseDir;
+        applicationInfo.jarPath = edited.jarPath;
+        applicationInfo.appName = edited.appName;
+
+        if (this.selectedAppName === oldName) {
+            this.selectedAppName = edited.appName;
+        }
+
+        if (oldName !== edited.appName) {
+            const b = this.branchesMap.get(oldName);
+            if (b) {
+                this.branchesMap.delete(oldName);
+                this.branchesMap.set(edited.appName, b);
+            }
+        }
+
+        this.save();
+    }
+
+    onAddApp(res: AddAppDialogResult | undefined): void {
+        const appInfo = res!.applicationInfo!;
+        if (this.checkNameExists(appInfo.appName)) {
+            this.notificationService.notifyError('Данное наименование уже используется', 'Ошибка');
+            return;
+        }
+
+        appInfo.appArguments = appInfo.appArguments ?? [];
+        appInfo.envVariables = appInfo.envVariables ?? [];
+
+        this.centralInfo.applicationInfos.push(appInfo);
+        this.recalculateStartOrder(true);
+        this.selectedAppName = appInfo.appName;
+    }
+
+    openAddArgDialog(app: ApplicationInfo, index: number = -1): void {
+        const isEdit = index >= 0
+
+        const ref = this.dialog.open<AddArgDialogComponent, any, AddArgDialogResult>(AddArgDialogComponent, {
             width: '720px',
             panelClass: 'solid-dialog',
             data: {
-                title: 'Редактировать приложение',
-                applicationInfo,
+                title: isEdit ? 'Редактировать JVM аргумент' : 'Добавить JVM аргумент',
+                arg: isEdit ? app.appArguments[index] : undefined,
             },
         });
 
@@ -321,108 +360,65 @@ export class AppComponent implements OnInit {
                 .afterClosed()
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((res) => {
-                    const edited = res?.applicationInfo;
-                    if (!edited || !edited.appName || !edited.baseDir || !edited.jarPath) return;
-
-                    if (this.checkNameExistsExcept(edited.appName, applicationInfo)) {
-                        this.notificationService.notifyError('Данное наименование уже используется', 'Ошибка');
-                        return;
+                    if (isEdit) {
+                        this.onEditArg(app, index, res);
+                    } else {
+                        this.onAddArg(app, res);
                     }
-
-                    applicationInfo.baseDir = edited.baseDir;
-                    applicationInfo.jarPath = edited.jarPath;
-                    applicationInfo.appName = edited.appName;
-
-                    if (this.selectedAppName === oldName) {
-                        this.selectedAppName = edited.appName;
-                    }
-
-                    if (oldName !== edited.appName) {
-                        const b = this.branchesMap.get(oldName);
-                        if (b) {
-                            this.branchesMap.delete(oldName);
-                            this.branchesMap.set(edited.appName, b);
-                        }
-                    }
-
-                    this.save();
                 });
     }
 
-    openAddArgDialog(app: ApplicationInfo): void {
-        const ref = this.dialog.open<AddArgDialogComponent, any, AddArgDialogResult>(AddArgDialogComponent, {
-            width: '720px',
-            panelClass: 'solid-dialog',
-            data: { title: 'Добавить JVM аргумент' },
-        });
-
-        ref
-                .afterClosed()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((res) => {
-                    const arg = res?.arg;
-                    if (!arg) return;
-                    app.appArguments.push(arg);
-                    this.save();
-                });
+    onAddArg(app: ApplicationInfo, res: AddArgDialogResult | undefined): void {
+        const arg = res?.arg;
+        if (!arg) return;
+        app.appArguments.push(arg);
+        this.save();
     }
 
-    openEditArgInfoDialog(applicationInfo: ApplicationInfo, index: number): void {
-        const ref = this.dialog.open<EditArgDialogComponent, any, EditArgDialogResult>(EditArgDialogComponent, {
-            width: '720px',
-            panelClass: 'solid-dialog',
-            data: { arg: applicationInfo.appArguments[index] },
-        });
-
-        ref
-                .afterClosed()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((res) => {
-                    const arg = res?.arg;
-                    if (!arg) return;
-                    applicationInfo.appArguments[index] = arg;
-                    this.save();
-                });
+    onEditArg(app: ApplicationInfo, index: number, res: AddArgDialogResult | undefined): void {
+        const arg = res?.arg;
+        if (!arg) return;
+        app.appArguments[index] = arg;
+        this.save();
     }
 
-    openAddEnvDialog(app: ApplicationInfo): void {
+    openAddEnvDialog(app: ApplicationInfo, env: EnvVariable | undefined = undefined): void {
         const ref = this.dialog.open<AddEnvDialogComponent, any, AddEnvDialogResult>(AddEnvDialogComponent, {
-            width: '560px',
+            width: '720px',
             panelClass: 'solid-dialog',
-            data: { title: `Добавить переменную окружения для "${app.appName}"` },
+            data: {
+                title: env ? "Редактировать переменную окружения" : "Добавить переменную окружения",
+                envVariable : env
+            },
         });
 
         ref
                 .afterClosed()
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((res) => {
-                    const envVariable = res?.envVariable;
-                    if (!envVariable) return;
-                    app.envVariables.push(envVariable);
-                    this.save();
+                    if (env) {
+                        this.onEditEnv(env, res);
+                    } else {
+                        this.onAddEnv(app, res);
+                    }
                 });
     }
 
-    openEditEnvInfoDialog(env: EnvVariable): void {
-        const ref = this.dialog.open<EditEnvDialogComponent, any, EditEnvDialogResult>(EditEnvDialogComponent, {
-            width: '720px',
-            panelClass: 'solid-dialog',
-            data: { name: env.name, value: env.value },
-        });
+    onAddEnv(app: ApplicationInfo, res: AddEnvDialogResult | undefined): void {
+        const envVariable = res?.envVariable;
+        if (!envVariable) return;
+        app.envVariables.push(envVariable);
+        this.save();
+    }
 
-        ref
-                .afterClosed()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((res) => {
-                    const name = res?.name;
-                    const value = res?.value;
-                    if (!name || value == null) return;
+    onEditEnv(env: EnvVariable, res: AddEnvDialogResult | undefined): void {
+        const name = res?.envVariable?.name;
+        const value = res?.envVariable?.value;
+        if (!name || value == null) return;
+        env.name = name;
+        env.value = value;
 
-                    env.name = name;
-                    env.value = value;
-
-                    this.save();
-                });
+        this.save();
     }
 
     openSettingsDialog(): void {
